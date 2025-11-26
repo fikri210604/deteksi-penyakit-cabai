@@ -1,0 +1,50 @@
+{% extends 'app.html' %}
+{% block title %}Admin - Sistem Pakar Cabai{% endblock %}
+{% block content %}
+<div class="grid md:grid-cols-2 gap-6">
+  <div class="bg-white rounded shadow p-6">
+    <h2 class="text-lg font-semibold mb-3">Statistik</h2>
+    <div class="grid grid-cols-2 gap-3 text-sm">
+      <div class="p-3 bg-gray-50 rounded">User: <span class="font-semibold">{{ total_user }}</span></div>
+      <div class="p-3 bg-gray-50 rounded">Gejala: <span class="font-semibold">{{ total_gejala }}</span></div>
+      <div class="p-3 bg-gray-50 rounded">Penyakit: <span class="font-semibold">{{ total_penyakit }}</span></div>
+      <div class="p-3 bg-gray-50 rounded">Rule: <span class="font-semibold">{{ total_rule }}</span></div>
+      <div class="p-3 bg-gray-50 rounded col-span-2">Total Riwayat: <span class="font-semibold">{{ total_history }}</span></div>
+    </div>
+    <div class="mt-4 flex gap-2">
+      <a class="px-3 py-2 rounded border" href="{{ url_for('gejala_bp.index') }}">Kelola Gejala</a>
+      <a class="px-3 py-2 rounded border" href="{{ url_for('penyakit_bp.index') }}">Kelola Penyakit</a>
+      <a class="px-3 py-2 rounded border" href="{{ url_for('rule_bp.groups') }}">Kelola Rule</a>
+    </div>
+  </div>
+  <div class="bg-white rounded shadow p-6">
+    <h2 class="text-lg font-semibold mb-3">Riwayat Terbaru</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="text-left px-3 py-2">Waktu</th>
+            <th class="text-left px-3 py-2">User</th>
+            <th class="text-left px-3 py-2">Penyakit</th>
+            <th class="text-left px-3 py-2">Skor</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in histories %}
+            <tr class="border-t">
+              <td class="px-3 py-2 whitespace-nowrap">{{ h.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+              <td class="px-3 py-2">{{ h.user.username if h.user else '-' }}</td>
+              <td class="px-3 py-2">{{ h.nama_penyakit }}</td>
+              <td class="px-3 py-2">{{ (h.skor_fuzzy * 100) | round(1) }}%</td>
+            </tr>
+          {% else %}
+            <tr>
+              <td class="px-3 py-4 text-center text-gray-500" colspan="4">Belum ada riwayat.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'app.html' %}
+{% block title %}Kelompok Rule - Admin{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-xl font-semibold">Kelompok Rule</h1>
+  <a href="{{ url_for('rule_bp.groups_create') }}" class="bg-blue-600 text-white px-3 py-2 rounded">Tambah Kelompok</a>
+</div>
+<div class="bg-white rounded shadow p-4">
+  {% if groups %}
+    <ul class="list-disc pl-5 text-sm">
+      {% for g in groups %}
+        <li class="mb-2">
+          <div class="font-medium">{{ g.nama or 'Group #' ~ g.id }} — Penyakit {{ g.kode_penyakit }} ({{ g.consequent_term }}{% if g.z_override is not none %} · z={{ '%.2f'|format(g.z_override) }}{% endif %}) — Bobot {{ g.bobot }} — {{ 'Aktif' if g.aktif else 'Nonaktif' }}</div>
+          {% if g.keterangan %}
+            <div class="text-gray-600 text-xs">{{ g.keterangan }}</div>
+          {% endif %}
+          <div class="text-gray-600">Kondisi: {% for c in g.kondisi %}{{ c.kode_gejala }}={{ c.antecedent_term }}{% if not loop.last %}, {% endif %}{% endfor %}</div>
+          <div class="mt-1 flex gap-3">
+            <a href="{{ url_for('rule_bp.groups_edit', id=g.id) }}" class="text-blue-600 hover:underline">Edit</a>
+            <a href="{{ url_for('rule_bp.groups_delete', id=g.id) }}" class="text-red-600 hover:underline" onclick="return confirm('Hapus group ini?')">Hapus</a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="text-sm text-gray-500">Belum ada kelompok rule.</div>
+  {% endif %}
+</div>
+{% endblock %}

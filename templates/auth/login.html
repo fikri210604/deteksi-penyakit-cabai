@@ -1,0 +1,53 @@
+{% extends 'app.html' %}
+{% block title %}Login - Sistem Pakar Cabai{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-white rounded-xl shadow-lg p-8 border border-gray-100">
+
+  <!-- Judul -->
+  <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+    Masuk ke Sistem Pakar Cabai
+  </h1>
+
+  <form method="post" action="{{ url_for('auth_bp.login') }}" class="space-y-5">
+
+    <!-- USERNAME -->
+    <div>
+      <label class="block text-sm font-medium mb-1 text-gray-700">Username</label>
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-lg">
+          person
+        </span>
+        <input name="username" required
+               class="w-full border rounded-lg pl-10 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition" />
+      </div>
+    </div>
+
+    <!-- PASSWORD -->
+    <div>
+      <label class="block text-sm font-medium mb-1 text-gray-700">Password</label>
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-lg">
+          lock
+        </span>
+        <input type="password" name="password" required
+               class="w-full border rounded-lg pl-10 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition" />
+      </div>
+    </div>
+
+    <!-- BUTTON -->
+    <button class="w-full bg-green-600 text-white py-2.5 text-sm font-semibold rounded-lg 
+                   hover:bg-green-700 transition shadow">
+      Masuk
+    </button>
+  </form>
+
+  <!-- REGISTER -->
+  <p class="text-sm text-gray-600 mt-5 text-center">
+    Belum punya akun?
+    <a class="text-green-700 hover:underline font-semibold"
+       href="{{ url_for('auth_bp.register') }}">Daftar Sekarang</a>
+  </p>
+
+</div>
+{% endblock %}

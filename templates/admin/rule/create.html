@@ -1,0 +1,43 @@
+{% extends 'app.html' %}
+{% block title %}Tambah Rule - Admin{% endblock %}
+{% block content %}
+<div class="max-w-xl bg-white rounded shadow p-6">
+  <h1 class="text-lg font-semibold mb-4">Tambah Rule</h1>
+  <form method="post">
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm mb-1">Gejala</label>
+        <select name="kode_gejala" class="border rounded w-full px-3 py-2" required>
+          <option value="" disabled selected>Pilih Gejala</option>
+          {% for g in gejala %}
+            <option value="{{ g.kode }}">{{ g.kode }} - {{ g.nama }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Penyakit</label>
+        <select name="kode_penyakit" class="border rounded w-full px-3 py-2" required>
+          <option value="" disabled selected>Pilih Penyakit</option>
+          {% for p in penyakit %}
+            <option value="{{ p.kode_penyakit }}">{{ p.kode_penyakit }} - {{ p.nama }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Tipe Fuzzy</label>
+        <select name="tipe_fuzzy" class="border rounded w-full px-3 py-2" required>
+          <option value="" disabled selected>Pilih Tipe</option>
+          <option value="rendah">rendah</option>
+          <option value="sedang">sedang</option>
+          <option value="parah">parah</option>
+        </select>
+      </div>
+    </div>
+    <div class="mt-6 flex gap-2">
+      <button class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+      <a href="{{ url_for('rule_bp.index') }}" class="px-4 py-2 rounded border">Batal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+

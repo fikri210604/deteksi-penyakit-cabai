@@ -1,0 +1,37 @@
+{% extends 'app.html' %}
+{% block title %}Riwayat - Sistem Pakar Cabai{% endblock %}
+{% block content %}
+<div class="bg-white rounded shadow p-6">
+  <h1 class="text-xl font-semibold mb-4">Riwayat Diagnosa</h1>
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="text-left px-3 py-2">Waktu</th>
+          <th class="text-left px-3 py-2">Penyakit</th>
+          <th class="text-left px-3 py-2">Skor Fuzzy</th>
+          <th class="text-left px-3 py-2">Skor Dempster</th>
+          <th class="text-left px-3 py-2">Gejala Terpilih</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for h in histories %}
+          <tr class="border-t">
+            <td class="px-3 py-2 whitespace-nowrap">{{ h.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td class="px-3 py-2">{{ h.nama_penyakit }}</td>
+            <td class="px-3 py-2">{{ (h.skor_fuzzy * 100) | round(2) }}%</td>
+            <td class="px-3 py-2">{{ (h.skor_dempster * 100) | round(2) }}%</td>
+            <td class="px-3 py-2 text-xs max-w-md">
+              <pre class="whitespace-pre-wrap">{{ h.gejala_terpilih }}</pre>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td class="px-3 py-4 text-center text-gray-500" colspan="5">Belum ada riwayat.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

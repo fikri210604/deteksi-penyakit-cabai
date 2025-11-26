@@ -1,0 +1,32 @@
+{% extends 'app.html' %}
+{% block title %}Edit Penyakit - Admin{% endblock %}
+{% block content %}
+<div class="max-w-xl bg-white rounded shadow p-6">
+  <h1 class="text-lg font-semibold mb-4">Edit Penyakit</h1>
+  <form method="post">
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm mb-1">Kode</label>
+        <input name="kode" value="{{ p.kode_penyakit }}" class="border rounded w-full px-3 py-2" required />
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Nama</label>
+        <input name="nama" value="{{ p.nama }}" class="border rounded w-full px-3 py-2" required />
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Deskripsi</label>
+        <textarea name="deskripsi" class="border rounded w-full px-3 py-2" rows="4">{{ p.deskripsi }}</textarea>
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Solusi</label>
+        <textarea name="solusi" class="border rounded w-full px-3 py-2" rows="4">{{ p.solusi }}</textarea>
+      </div>
+    </div>
+    <div class="mt-6 flex gap-2">
+      <button class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+      <a href="{{ url_for('penyakit_bp.index') }}" class="px-4 py-2 rounded border">Batal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+

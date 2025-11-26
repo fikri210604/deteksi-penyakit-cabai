@@ -1,0 +1,18 @@
+{% extends 'app.html' %}
+{% block title %}Hasil Diagnosa - Sistem Pakar Cabai{% endblock %}
+{% block content %}
+<div class="bg-white rounded shadow p-6">
+  <h1 class="text-xl font-semibold mb-4">Hasil Diagnosa</h1>
+  <div class="space-y-2">
+    <p><span class="font-medium">Penyakit:</span> {{ result.get('penyakit', 'Tidak diketahui') }}</p>
+    <p><span class="font-medium">Akurasi Fuzzy:</span> {{ (result.get('nilai_fuzzy', 0) * 100) | round(2) }}%</p>
+    {% if info %}
+      <div class="pt-2 text-sm text-gray-600">Info: {{ info.nama }}</div>
+    {% endif %}
+  </div>
+  <div class="mt-6 flex gap-2">
+    <a href="{{ url_for('user_bp.dashboard') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Kembali</a>
+    <a href="{{ url_for('user_bp.history') }}" class="bg-gray-100 text-gray-800 px-4 py-2 rounded hover:bg-gray-200">Lihat Riwayat</a>
+  </div>
+</div>
+{% endblock %}

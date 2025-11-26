@@ -1,0 +1,95 @@
+{% extends 'app.html' %}
+{% block title %}Tambah Kelompok Rule - Admin{% endblock %}
+{% block content %}
+<div class="max-w-2xl bg-white rounded shadow p-6">
+  <h1 class="text-lg font-semibold mb-4">Tambah Kelompok Rule (Multi-Gejala)</h1>
+  <form method="post">
+    <div class="mt-2">
+      <h2 class="font-medium mb-2">Kondisi (Tambah Gejala + Keterangan)</h2>
+      <p class="text-xs text-gray-600 mb-3">Klik "Tambah Gejala" untuk menambah baris. Baris kosong diabaikan.</p>
+      <div id="rows" class="space-y-2">
+        <div class="grid md:grid-cols-2 gap-2 condition-row">
+          <select name="kode_gejala[]" class="border rounded w-full px-3 py-2">
+            <option value="">Pilih Gejala</option>
+            {% for g in gejala %}
+              <option value="{{ g.kode }}">{{ g.kode }} - {{ g.nama }}</option>
+            {% endfor %}
+          </select>
+          <select name="antecedent_term[]" class="border rounded w-full px-3 py-2">
+            <option value="">Pilih Term</option>
+            <option value="tidak_ada">tidak_ada</option>
+            <option value="sedikit">sedikit</option>
+            <option value="sedang">sedang</option>
+            <option value="banyak">banyak</option>
+            <option value="sangat_banyak">sangat_banyak</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-2">
+        <button type="button" id="btnAdd" class="px-3 py-2 rounded border">Tambah Gejala</button>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 mt-6">
+      <div class="md:col-span-2">
+        <label class="block text-sm mb-1">Nama (opsional)</label>
+        <input name="nama" class="border rounded w-full px-3 py-2" placeholder="misal: Aturan P2 Kombinasi A" />
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Penyakit</label>
+        <select name="kode_penyakit" class="border rounded w-full px-3 py-2" required>
+          <option value="" disabled selected>Pilih</option>
+          {% for p in penyakit %}
+            <option value="{{ p.kode_penyakit }}">{{ p.kode_penyakit }} - {{ p.nama }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Konsekuen (Sugeno)</label>
+        <select name="consequent_term" class="border rounded w-full px-3 py-2" required>
+          <option value="" disabled selected>Pilih</option>
+          <option value="rendah">rendah</option>
+          <option value="sedang">sedang</option>
+          <option value="tinggi">tinggi</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm mb-1">z override (0–1, opsional)</label>
+        <input name="z_override" type="number" min="0" max="1" step="0.01" class="border rounded w-full px-3 py-2" placeholder="contoh: 0.7" />
+        <p class="text-xs text-gray-500 mt-1">Jika diisi, menggantikan nilai z default (rendah=0.2, sedang=0.5, tinggi=0.8).</p>
+      </div>
+      <div class="md:col-span-2">
+        <label class="block text-sm mb-1">Keterangan (opsional)</label>
+        <textarea name="keterangan" rows="3" class="border rounded w-full px-3 py-2" placeholder="catatan penjelas aturan"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Bobot</label>
+        <input name="bobot" type="number" min="0" max="1" step="0.1" value="1" class="border rounded w-full px-3 py-2" />
+      </div>
+      <div class="flex items-center gap-2 mt-6">
+        <input id="aktif" name="aktif" type="checkbox" checked class="border rounded" />
+        <label for="aktif" class="text-sm">Aktif</label>
+      </div>
+    </div>
+
+    <div class="mt-6 flex gap-2">
+      <button class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+      <a href="{{ url_for('rule_bp.groups') }}" class="px-4 py-2 rounded border">Batal</a>
+    </div>
+  </form>
+
+  <script>
+    (function(){
+      const btn = document.getElementById('btnAdd');
+      const rows = document.getElementById('rows');
+      btn.addEventListener('click', function(){
+        const first = rows.querySelector('.condition-row');
+        const clone = first.cloneNode(true);
+        // reset value
+        clone.querySelectorAll('select').forEach(s => s.value = '');
+        rows.appendChild(clone);
+      });
+    })();
+  </script>
+</div>
+{% endblock %}

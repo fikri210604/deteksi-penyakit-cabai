@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Sistem Pakar Cabai{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+
+<body class="bg-gray-50 text-gray-900 flex flex-col min-h-screen">
+
+<!-- ================= NAVBAR ================= -->
+<header class="bg-white border-b shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <a href="{{ url_for('index') }}" class="flex items-center gap-2 font-bold text-lg text-red-700">
+            <span class="material-symbols-outlined text-red-700">local_florist</span>
+            Sistem Pakar Cabai
+        </a>
+        <nav class="flex items-center gap-6 text-sm">
+
+            {% if current_user.is_authenticated %}
+
+                {% if current_user.role == 'admin' %}
+                <a href="{{ url_for('admin_bp.dashboard') }}"
+                   class="text-gray-700 hover:text-red-700 transition font-medium">
+                   Admin
+                </a>
+                {% else %}
+                <a href="{{ url_for('user_bp.dashboard') }}"
+                   class="text-gray-700 hover:text-red-700 transition font-medium">
+                   Dashboard
+                </a>
+                {% endif %}
+
+                <a href="{{ url_for('auth_bp.logout') }}"
+                   class="text-red-600 font-semibold hover:text-red-700 transition">
+                   Logout
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('auth_bp.login') }}"
+                   class="text-gray-700 hover:text-red-700 transition font-medium">
+                   Login
+                </a>
+
+                <a href="{{ url_for('auth_bp.register') }}"
+                   class="text-gray-700 hover:text-red-700 transition font-medium">
+                   Daftar
+                </a>
+
+            {% endif %}
+
+        </nav>
+    </div>
+</header>
+
+
+
+<!-- ================= CONTENT ================= -->
+<main class="flex-1 max-w-6xl mx-auto px-4 py-6">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="space-y-2 mb-4">
+            {% for category, message in messages %}
+                {% set color = 'blue' %}
+                {% if category == 'success' %}{% set color = 'green' %}{% endif %}
+                {% if category == 'warning' %}{% set color = 'yellow' %}{% endif %}
+                {% if category in ['danger','error'] %}{% set color = 'red' %}{% endif %}
+
+                <div class="flex items-center gap-2 border-l-4 pl-3 py-2 bg-white
+                            border-{{ color }}-500 text-sm rounded shadow-sm">
+                    <span class="material-symbols-outlined text-{{ color }}-500">info</span>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-white border-t mt-10">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-center text-sm text-gray-600">
+
+        <p class="font-semibold text-gray-700">
+            Sistem Pakar Diagnosa Penyakit Tanaman Cabai
+        </p>
+
+        <p class="text-gray-500 mt-1">
+            Berdasarkan Fuzzy-Tsukamoto & Rule-Based Expert System
+        </p>
+
+        <div class="flex justify-center gap-4 mt-4 text-gray-400 text-xs">
+            <a href="#" class="hover:text-green-700 transition">Kebijakan Privasi</a>
+            <a href="#" class="hover:text-green-700 transition">Syarat & Ketentuan</a>
+            <a href="mailto:admin@sistempakar.com" class="hover:text-green-700 transition">Kontak</a>
+        </div>
+
+        <p class="mt-4 text-gray-400 text-xs">
+            &copy; {{ 2025 }} Sistem Pakar Cabai. All Rights Reserved.
+        </p>
+
+    </div>
+</footer>
+
+</body>
+</html>

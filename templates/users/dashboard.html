@@ -1,0 +1,46 @@
+{% extends 'app.html' %}
+{% block title %}Dashboard - Sistem Pakar Cabai{% endblock %}
+{% block content %}
+<div class="bg-white rounded shadow p-6">
+  <h1 class="text-xl font-semibold mb-4">Input Gejala</h1>
+  <form method="post" action="{{ url_for('diagnosis_bp.diagnose') }}" class="space-y-6">
+    <p class="text-sm text-gray-600">Tambah gejala dan pilih keterangannya, lalu proses diagnosa.</p>
+    <div id="rows" class="space-y-3">
+      <div class="grid md:grid-cols-2 gap-2 condition-row">
+        <select name="kode_gejala[]" class="border rounded w-full px-3 py-2">
+          <option value="">Pilih Gejala</option>
+          {% for s in symptoms %}
+            <option value="{{ s.kode }}">{{ s.kode }} - {{ s.nama }}</option>
+          {% endfor %}
+        </select>
+        <select name="term[]" class="border rounded w-full px-3 py-2">
+          <option value="">Pilih Keterangan</option>
+          <option value="tidak_ada">tidak_ada</option>
+          <option value="sedikit">sedikit</option>
+          <option value="sedang">sedang</option>
+          <option value="banyak">banyak</option>
+          <option value="sangat_banyak">sangat_banyak</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button type="button" id="btnAdd" class="px-3 py-2 rounded border">Tambah Gejala</button>
+    </div>
+    <div class="flex justify-end">
+      <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Proses Diagnosa</button>
+    </div>
+  </form>
+</div>
+<script>
+(function(){
+  const btn = document.getElementById('btnAdd');
+  const rows = document.getElementById('rows');
+  btn.addEventListener('click', function(){
+    const first = rows.querySelector('.condition-row');
+    const clone = first.cloneNode(true);
+    clone.querySelectorAll('select').forEach(s => s.value = '');
+    rows.appendChild(clone);
+  });
+})();
+</script>
+{% endblock %}

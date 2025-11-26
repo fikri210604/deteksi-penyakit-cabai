@@ -1,0 +1,57 @@
+{% extends 'app.html' %}
+{% block title %}Rule - Admin{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-xl font-semibold">Rule</h1>
+  <div class="flex gap-2">
+    <a href="{{ url_for('rule_bp.create') }}" class="bg-blue-600 text-white px-3 py-2 rounded">Tambah Rule</a>
+    <a href="{{ url_for('rule_bp.groups') }}" class="px-3 py-2 rounded border">Kelompok Rule</a>
+  </div>
+</div>
+<div class="bg-white rounded shadow overflow-x-auto">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="text-left px-3 py-2">Gejala</th>
+        <th class="text-left px-3 py-2">Penyakit</th>
+        <th class="text-left px-3 py-2">Tipe Fuzzy</th>
+        <th class="text-left px-3 py-2">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rules %}
+      <tr class="border-t">
+        <td class="px-3 py-2">{{ r.kode_gejala }}</td>
+        <td class="px-3 py-2">{{ r.kode_penyakit }}</td>
+        <td class="px-3 py-2">{{ r.tipe_fuzzy }}</td>
+        <td class="px-3 py-2 whitespace-nowrap">
+          <a href="{{ url_for('rule_bp.delete', id=r.id) }}" class="text-red-600 hover:underline" onclick="return confirm('Hapus rule ini?')">Hapus</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="4" class="px-3 py-6 text-center text-gray-500">Belum ada rule.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="mt-8">
+  <h2 class="text-lg font-semibold mb-2">Kelompok Rule (Multi-Gejala)</h2>
+  <div class="bg-white rounded shadow p-4">
+    {% if groups %}
+      <ul class="list-disc pl-5 text-sm">
+        {% for g in groups %}
+          <li class="mb-1">
+            <div class="font-medium">{{ g.nama or 'Group #' ~ g.id }} — Penyakit {{ g.kode_penyakit }} ({{ g.consequent_term }}) — Bobot {{ g.bobot }} — {{ 'Aktif' if g.aktif else 'Nonaktif' }}</div>
+            <div class="text-gray-600">Kondisi: {% for c in g.kondisi %}{{ c.kode_gejala }}={{ c.antecedent_term }}{% if not loop.last %}, {% endif %}{% endfor %}</div>
+            <div><a href="{{ url_for('rule_bp.groups_delete', id=g.id) }}" class="text-red-600 hover:underline" onclick="return confirm('Hapus group ini?')">Hapus</a></div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="text-sm text-gray-500">Belum ada kelompok rule. <a href="{{ url_for('rule_bp.groups_create') }}" class="text-blue-600 hover:underline">Buat sekarang</a>.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

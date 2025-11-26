@@ -1,0 +1,104 @@
+{% extends 'base_public.html' %}
+{% block title %}Beranda - Sistem Pakar Penyakit Cabai{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="pt-24 pb-20 bg-gradient-to-b from-red-100 via-white to-white">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+
+        <div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 leading-tight">
+                Deteksi Penyakit Tanaman Cabai<br>
+                <span class="text-red-700">Dengan Sistem Pakar</span>
+            </h1>
+            <p class="mt-4 text-gray-600 text-lg">
+                Lakukan diagnosa penyakit cabai berbasis 
+                <span class="font-semibold text-red-700">Fuzzy-Sugeno</span> 
+                secara cepat, akurat, dan mudah — cukup geser tingkat kemunculan gejala.
+            </p>
+
+            <div class="mt-8 flex gap-4">
+                <a href="{{ url_for('auth_bp.login') }}"
+                   class="px-7 py-3 rounded-lg bg-red-600 text-white font-semibold shadow-md hover:bg-red-700 transition">
+                    Mulai Diagnosa
+                </a>
+                <a href="{{ url_for('auth_bp.register') }}"
+                   class="px-7 py-3 rounded-lg bg-white border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition">
+                    Daftar Akun
+                </a>
+            </div>
+        </div>
+
+        <!-- Hero Image -->
+        <div class="flex justify-center">
+            <div class="relative">
+                <div class="absolute -inset-4 bg-red-200/30 blur-2xl rounded-full"></div>
+
+                <img src="{{ url_for('static', filename='images/cabai.jpeg') }}"
+                     alt="Cabai"
+                     class="relative w-72 md:w-96 drop-shadow-2xl animate-[float_3s_ease-in-out_infinite]">
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- WHY SECTION -->
+<section class="py-20 bg-gradient-to-b from-white to-red-50">
+    <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800">
+            Mengapa Menggunakan Sistem Kami?
+        </h2>
+        <p class="text-center text-gray-600 mt-2 mb-14">
+            Dirancang untuk membantu petani dan peneliti mendiagnosa penyakit tanaman cabai secara akurat.
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            
+            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition border border-gray-100">
+                <div class="w-14 h-14 flex items-center justify-center bg-red-100 text-red-700 rounded-full">
+                    <span class="material-symbols-outlined text-3xl">bolt</span>
+                </div>
+                <h3 class="text-xl font-semibold mt-5">Cepat & Mudah</h3>
+                <p class="text-gray-600 mt-2">
+                    Diagnosa dapat dilakukan dalam hitungan detik dengan antarmuka yang intuitif.
+                </p>
+            </div>
+
+            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition border border-gray-100">
+                <div class="w-14 h-14 flex items-center justify-center bg-red-100 text-red-700 rounded-full">
+                    <span class="material-symbols-outlined text-3xl">verified</span>
+                </div>
+                <h3 class="text-xl font-semibold mt-5">Akurasi Tinggi</h3>
+                <p class="text-gray-600 mt-2">
+                    Menggunakan metode fuzzy dan basis aturan pakar untuk hasil yang presisi.
+                </p>
+            </div>
+
+            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition border border-gray-100">
+                <div class="w-14 h-14 flex items-center justify-center bg-red-100 text-red-700 rounded-full">
+                    <span class="material-symbols-outlined text-3xl">history</span>
+                </div>
+                <h3 class="text-xl font-semibold mt-5">Riwayat Diagnosa</h3>
+                <p class="text-gray-600 mt-2">
+                    Semua riwayat tersimpan sehingga dapat Anda akses kapan saja.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="py-20 bg-red-600 text-white text-center">
+    <h2 class="text-3xl md:text-4xl font-bold">Mulai Diagnosa Sekarang</h2>
+    <p class="text-white/90 mt-2">Deteksi penyakit cabai Anda dengan cepat dan tepat.</p>
+
+    <a href="{{ url_for('auth_bp.login') }}"
+       class="mt-8 inline-block px-8 py-3 bg-white text-red-800 font-semibold rounded-lg shadow hover:bg-gray-100 transition">
+        Masuk untuk Memulai
+    </a>
+</section>
+
+{% endblock %}
