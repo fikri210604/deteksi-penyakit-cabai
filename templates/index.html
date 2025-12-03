@@ -3,102 +3,375 @@
 
 {% block content %}
 
-<!-- HERO -->
-<section class="pt-24 pb-20 bg-gradient-to-b from-red-100 via-white to-white">
-    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+<!-- HERO SECTION -->
+<section class="relative pt-24 pb-20 overflow-hidden pattern-bg">
+    <!-- Decorative Elements -->
+    <div class="absolute top-20 left-10 w-72 h-72 bg-red-200/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-orange-200/20 rounded-full blur-3xl"></div>
+    
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            
+            <!-- Left Content -->
+            <div class="animate-slideInLeft">
+                <div class="inline-block px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-semibold mb-6">
+                    🌶️ Sistem Pakar Berbasis AI
+                </div>
+                
+                <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6" style="letter-spacing: -0.02em;">
+                    Deteksi Penyakit<br>
+                    Tanaman <span class="gradient-text">Cabai</span>
+                </h1>
+                
+                <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                    Lakukan diagnosa penyakit cabai berbasis 
+                    <span class="font-bold text-red-600">Fuzzy-Sugeno</span> 
+                    secara cepat, akurat, dan mudah — cukup geser tingkat kemunculan gejala.
+                </p>
 
-        <div>
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 leading-tight">
-                Deteksi Penyakit Tanaman Cabai<br>
-                <span class="text-red-700">Dengan Sistem Pakar</span>
-            </h1>
-            <p class="mt-4 text-gray-600 text-lg">
-                Lakukan diagnosa penyakit cabai berbasis 
-                <span class="font-semibold text-red-700">Fuzzy-Sugeno</span> 
-                secara cepat, akurat, dan mudah — cukup geser tingkat kemunculan gejala.
-            </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="{{ url_for('auth_bp.login') }}" class="btn-primary group px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all text-center">
+                        <span class="relative z-10 flex items-center justify-center gap-2">
+                            Mulai Diagnosa
+                            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                            </svg>
+                        </span>
+                    </a>
+                    
+                    <a href="{{ url_for('auth_bp.register') }}" class="group px-8 py-4 rounded-xl bg-white border-2 border-gray-200 text-gray-700 font-bold hover:border-red-300 hover:bg-red-50 transition-all text-center">
+                        <span class="flex items-center justify-center gap-2">
+                            Daftar Akun
+                            <svg class="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                            </svg>
+                        </span>
+                    </a>
+                </div>
 
-            <div class="mt-8 flex gap-4">
-                <a href="{{ url_for('auth_bp.login') }}"
-                   class="px-7 py-3 rounded-lg bg-red-600 text-white font-semibold shadow-md hover:bg-red-700 transition">
-                    Mulai Diagnosa
-                </a>
-                <a href="{{ url_for('auth_bp.register') }}"
-                   class="px-7 py-3 rounded-lg bg-white border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition">
-                    Daftar Akun
-                </a>
+                <!-- Stats -->
+                <div class="mt-12 grid grid-cols-3 gap-6">
+                    <div>
+                        <div class="text-3xl font-bold text-red-600">98%</div>
+                        <div class="text-sm text-gray-600 mt-1">Akurasi</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold text-red-600">1000+</div>
+                        <div class="text-sm text-gray-600 mt-1">Pengguna</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold text-red-600">24/7</div>
+                        <div class="text-sm text-gray-600 mt-1">Tersedia</div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Hero Image -->
-        <div class="flex justify-center">
-            <div class="relative">
-                <div class="absolute -inset-4 bg-red-200/30 blur-2xl rounded-full"></div>
+            <div class="flex justify-center animate-slideInRight">
+    <div class="relative">
+        <div class="absolute -inset-8 bg-gradient-to-r from-red-400/20 to-orange-400/20 blur-3xl rounded-full"></div>
 
-                <img src="{{ url_for('static', filename='images/cabai.jpeg') }}"
-                     alt="Cabai"
-                     class="relative w-72 md:w-96 drop-shadow-2xl animate-[float_3s_ease-in-out_infinite]">
+        <!-- CARD -->
+        <div class="relative bg-white/50 backdrop-blur-sm p-4 rounded-3xl shadow-2xl">
+
+            <!-- FULL IMAGE CARD -->
+            <div class="w-80 h-80 rounded-2xl overflow-hidden">
+                <img 
+                    src="../static/images/cabai.jpeg" 
+                    alt="Gambar Cabai" 
+                    class="w-full h-full object-cover"
+                >
             </div>
-        </div>
 
+        </div>
+    </div>
+</div>
+
+        </div>
     </div>
 </section>
 
 <!-- WHY SECTION -->
-<section class="py-20 bg-gradient-to-b from-white to-red-50">
+<section class="py-24 bg-gradient-to-b from-white to-gray-50">
     <div class="max-w-6xl mx-auto px-6">
-        <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800">
-            Mengapa Menggunakan Sistem Kami?
-        </h2>
-        <p class="text-center text-gray-600 mt-2 mb-14">
-            Dirancang untuk membantu petani dan peneliti mendiagnosa penyakit tanaman cabai secara akurat.
-        </p>
+        
+        <div class="text-center mb-16 animate-fadeInUp">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4" style="letter-spacing: -0.02em;">
+                Mengapa Pilih Kami?
+            </h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Dirancang khusus untuk membantu petani dan peneliti mendiagnosa penyakit tanaman cabai dengan akurat dan efisien
+            </p>
+        </div>
 
         <div class="grid md:grid-cols-3 gap-8">
             
-            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition border border-gray-100">
-                <div class="w-14 h-14 flex items-center justify-center bg-red-100 text-red-700 rounded-full">
-                    <span class="material-symbols-outlined text-3xl">bolt</span>
+            <!-- Card 1 -->
+            <div class="card-hover group p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
+                <div class="relative w-16 h-16 mb-6">
+                    <div class="absolute inset-0 bg-red-100 rounded-2xl group-hover:scale-110 transition-transform"></div>
+                    <div class="relative flex items-center justify-center w-full h-full text-red-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold mt-5">Cepat & Mudah</h3>
-                <p class="text-gray-600 mt-2">
-                    Diagnosa dapat dilakukan dalam hitungan detik dengan antarmuka yang intuitif.
+                <h3 class="text-2xl font-bold text-gray-900 mb-3">Cepat & Mudah</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Diagnosa dapat dilakukan dalam hitungan detik dengan antarmuka yang intuitif dan user-friendly
                 </p>
             </div>
 
-            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition border border-gray-100">
-                <div class="w-14 h-14 flex items-center justify-center bg-red-100 text-red-700 rounded-full">
-                    <span class="material-symbols-outlined text-3xl">verified</span>
+            <!-- Card 2 -->
+            <div class="card-hover group p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
+                <div class="relative w-16 h-16 mb-6">
+                    <div class="absolute inset-0 bg-green-100 rounded-2xl group-hover:scale-110 transition-transform"></div>
+                    <div class="relative flex items-center justify-center w-full h-full text-green-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold mt-5">Akurasi Tinggi</h3>
-                <p class="text-gray-600 mt-2">
-                    Menggunakan metode fuzzy dan basis aturan pakar untuk hasil yang presisi.
+                <h3 class="text-2xl font-bold text-gray-900 mb-3">Akurasi Tinggi</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Menggunakan metode Fuzzy-Sugeno dan basis aturan pakar untuk hasil diagnosis yang presisi
                 </p>
             </div>
 
-            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition border border-gray-100">
-                <div class="w-14 h-14 flex items-center justify-center bg-red-100 text-red-700 rounded-full">
-                    <span class="material-symbols-outlined text-3xl">history</span>
+            <!-- Card 3 -->
+            <div class="card-hover group p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
+                <div class="relative w-16 h-16 mb-6">
+                    <div class="absolute inset-0 bg-blue-100 rounded-2xl group-hover:scale-110 transition-transform"></div>
+                    <div class="relative flex items-center justify-center w-full h-full text-blue-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold mt-5">Riwayat Diagnosa</h3>
-                <p class="text-gray-600 mt-2">
-                    Semua riwayat tersimpan sehingga dapat Anda akses kapan saja.
+                <h3 class="text-2xl font-bold text-gray-900 mb-3">Riwayat Diagnosa</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Semua riwayat tersimpan aman dan dapat Anda akses kapan saja untuk monitoring berkelanjutan
                 </p>
             </div>
 
         </div>
+
+        <!-- Additional Features -->
+        <div class="mt-16 p-8 bg-gradient-to-r from-red-50 to-orange-50 rounded-3xl border border-red-100">
+            <div class="grid md:grid-cols-4 gap-6 text-center">
+                <div>
+                    <div class="text-red-600 mb-2">🔬</div>
+                    <div class="font-semibold text-gray-900">Berbasis Riset</div>
+                </div>
+                <div>
+                    <div class="text-red-600 mb-2">📱</div>
+                    <div class="font-semibold text-gray-900">Mobile Friendly</div>
+                </div>
+                <div>
+                    <div class="text-red-600 mb-2">🔒</div>
+                    <div class="font-semibold text-gray-900">Data Aman</div>
+                </div>
+                <div>
+                    <div class="text-red-600 mb-2">💬</div>
+                    <div class="font-semibold text-gray-900">Support 24/7</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
 
 <!-- CTA SECTION -->
-<section class="py-20 bg-red-600 text-white text-center">
-    <h2 class="text-3xl md:text-4xl font-bold">Mulai Diagnosa Sekarang</h2>
-    <p class="text-white/90 mt-2">Deteksi penyakit cabai Anda dengan cepat dan tepat.</p>
+<section class="relative py-24 bg-gradient-to-br from-red-600 via-red-700 to-red-800 text-white overflow-hidden">
+    <!-- Decorative Pattern -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+    </div>
+    
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+        <div class="inline-block px-6 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-semibold mb-6">
+            🚀 Mulai Sekarang
+        </div>
+        
+        <h2 class="text-4xl md:text-5xl font-bold mb-6" style="letter-spacing: -0.02em;">
+            Siap Mendiagnosa Tanaman Cabai Anda?
+        </h2>
+        
+        <p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+            Bergabunglah dengan ribuan petani yang telah mempercayai sistem kami untuk diagnosis penyakit cabai yang akurat
+        </p>
 
-    <a href="{{ url_for('auth_bp.login') }}"
-       class="mt-8 inline-block px-8 py-3 bg-white text-red-800 font-semibold rounded-lg shadow hover:bg-gray-100 transition">
-        Masuk untuk Memulai
-    </a>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#" class="group px-10 py-4 bg-white text-red-700 font-bold rounded-xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all">
+                <span class="flex items-center justify-center gap-2">
+                    Masuk untuk Memulai
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                    </svg>
+                </span>
+            </a>
+            
+            <a href="#" class="group px-10 py-4 bg-transparent border-2 border-white text-white font-bold rounded-xl hover:bg-white hover:text-red-700 transition-all">
+                <span class="flex items-center justify-center gap-2">
+                    Pelajari Lebih Lanjut
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                </span>
+            </a>
+        </div>
+    </div>
 </section>
+
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .animate-slideInLeft {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+        
+        .animate-slideInRight {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+        
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .pattern-bg {
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(239, 68, 68, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(239, 68, 68, 0.08) 0%, transparent 50%);
+        }
+        
+        .icon-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+
+<script>
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.card-hover').forEach((card) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.6s ease-out';
+        observer.observe(card);
+    });
+</script>
 
 {% endblock %}

@@ -60,7 +60,7 @@
 
 
 <!-- ================= CONTENT ================= -->
-<main class="flex-1 max-w-6xl mx-auto px-4 py-6">
+<main class="flex-1 w-full px-4 py-6">
 
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -84,8 +84,6 @@
     {% block content %}{% endblock %}
 
 </main>
-
-
 
 <!-- ================= FOOTER ================= -->
 <footer class="bg-white border-t mt-10">
