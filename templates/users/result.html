@@ -1,18 +1,147 @@
 {% extends 'app.html' %}
 {% block title %}Hasil Diagnosa - Sistem Pakar Cabai{% endblock %}
+
 {% block content %}
-<div class="bg-white rounded shadow p-6">
+<div id="resultCard" class="bg-white rounded shadow p-6">
   <h1 class="text-xl font-semibold mb-4">Hasil Diagnosa</h1>
   <div class="space-y-2">
-    <p><span class="font-medium">Penyakit:</span> {{ result.get('penyakit', 'Tidak diketahui') }}</p>
-    <p><span class="font-medium">Akurasi Fuzzy:</span> {{ (result.get('nilai_fuzzy', 0) * 100) | round(2) }}%</p>
+    <p>
+      <span class="font-medium">Penyakit:</span>
+      {{ result.get('penyakit', 'Tidak diketahui') }}
+    </p>
+
+    <p>
+      <span class="font-medium">Akurasi Fuzzy:</span>
+      {{ (result.nilai_fuzzy * 100) | round(2) }}%
+    </p>
+
     {% if info %}
-      <div class="pt-2 text-sm text-gray-600">Info: {{ info.nama }}</div>
+    <div class="pt-2 text-sm text-gray-600">
+      Info: {{ info.nama }}
+    </div>
     {% endif %}
   </div>
-  <div class="mt-6 flex gap-2">
-    <a href="{{ url_for('user_bp.dashboard') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Kembali</a>
-    <a href="{{ url_for('user_bp.history') }}" class="bg-gray-100 text-gray-800 px-4 py-2 rounded hover:bg-gray-200">Lihat Riwayat</a>
+
+  <div class="mt-6">
+    <h2 class="text-lg font-semibold mb-3">Grafik Skor Fuzzy per Penyakit</h2>
+
+    {% if result.get('skor_penyakit') %}
+    <div class="max-w-xl">
+      <canvas id="fuzzyPieChart" height="200"></canvas>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      (function () {
+        const skor = {{ result.get('skor_penyakit', {}) | tojson }};
+        const labels = Object.keys(skor);
+        const values = Object.values(skor);
+        const total = values.reduce((a, b) => a + b, 0);
+
+        const baseColors = [
+          '#ef4444', '#22c55e', '#3b82f6', '#f59e0b', '#a855f7',
+          '#06b6d4', '#84cc16', '#f97316', '#e11d48', '#14b8a6'
+        ];
+
+        const colors = labels.map((_, i) => baseColors[i % baseColors.length]);
+
+        const ctx = document.getElementById('fuzzyPieChart');
+        if (!ctx) return;
+
+        window.fuzzyPieChartInstance = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels,
+            datasets: [{
+              data: values,
+              backgroundColor: colors,
+              borderColor: '#ffffff',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'bottom' },
+              tooltip: {
+                callbacks: {
+                  label: (context) => {
+                    const label = context.label || '';
+                    const v = Number(context.raw || 0);
+                    const pct = total > 0 ? ((v / total) * 100).toFixed(1) : '0.0';
+                    return `${label}: ${v} (${pct}%)`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      })();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+    {% else %}
+    <p class="text-sm text-gray-500">Tidak ada data skor penyakit untuk ditampilkan.</p>
+    {% endif %}
+  </div>
+
+  <!-- Tombol Aksi -->
+  <div class="mt-6 flex gap-2 no-print">
+    <button id="btnPrint" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+      Cetak PDF
+    </button>
+
+    <button id="btnDownloadPNG" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">
+      Unduh PNG
+    </button>
+
+    <a href="{{ url_for('user_bp.dashboard') }}"
+       class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Kembali
+    </a>
+
+    <a href="{{ url_for('user_bp.history') }}"
+       class="bg-gray-100 text-gray-800 px-4 py-2 rounded hover:bg-gray-200">
+      Lihat Riwayat
+    </a>
   </div>
 </div>
+
+<!-- Aksi tombol -->
+<script>
+  const btnPrint = document.getElementById('btnPrint');
+  const btnPNG = document.getElementById('btnDownloadPNG');
+
+  btnPrint?.addEventListener('click', () => {
+    setTimeout(() => window.print(), 100);
+  });
+
+  btnPNG?.addEventListener('click', () => {
+    const node = document.getElementById('resultCard');
+    if (!node || typeof html2canvas === 'undefined') return;
+
+    html2canvas(node, {
+      scale: 2,
+      backgroundColor: '#ffffff'
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'hasil-diagnosa.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  });
+</script>
+
+<!-- Styling print -->
+<style>
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+</style>
+
 {% endblock %}

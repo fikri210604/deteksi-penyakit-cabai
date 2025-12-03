@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from controllers.admin_controller import admin_only
-from models import db, Rule, Gejala, Penyakit, RuleGroup, RuleCondition
+from models import db, Gejala, Penyakit, RuleGroup, RuleCondition
 
 rule_bp = Blueprint('rule_bp', __name__, url_prefix="/admin/rule")
 

@@ -8,146 +8,143 @@ def run_rule_group_seeder():
 
         DATA_RULES = [
 
-            # P1 – Rebah Semai
-            {
-                'nama': 'RG-P1-1',
-                'kode_penyakit': 'P1',
-                'consequent_term': 'tinggi',
-                'bobot': 1.0,
-                'aktif': True,
-                'kondisi': [
-                    ('G1', 'banyak'),
-                    ('G2', 'sedang'),
-                    ('G9', 'banyak'),
-                ]
-            },
-
-            # P2 – Layu Bakteri
-            {
-                'nama': 'RG-P2-1',
-                'kode_penyakit': 'P2',
-                'consequent_term': 'tinggi',
-                'bobot': 1.0,
-                'aktif': True,
-                'kondisi': [
-                    ('G4', 'banyak'),
-                    ('G6', 'sedang'),
-                    ('G7', 'banyak'),
-                ]
-            },
-
-            # P3 – Layu Fusarium
-            {
-                'nama': 'RG-P3-1',
-                'kode_penyakit': 'P3',
-                'consequent_term': 'tinggi',
-                'bobot': 1.0,
-                'aktif': True,
-                'kondisi': [
-                    ('G4', 'sedang'),
-                    ('G5', 'banyak'),
-                    ('G9', 'banyak'),
-                ]
-            },
-
-            # P4 – Busuk Phytophthora
-            {
-                'nama': 'RG-P4-1',
-                'kode_penyakit': 'P4',
-                'consequent_term': 'tinggi',
-                'bobot': 1.0,
-                'aktif': True,
-                'kondisi': [
-                    ('G8', 'banyak'),
-                    ('G10', 'banyak'),
-                    ('G11', 'sedang'),
-                ]
-            },
-
-            # P5 – Kuncup Daun
-            {
-                'nama': 'RG-P5-1',
-                'kode_penyakit': 'P5',
-                'consequent_term': 'sedang',
-                'bobot': 0.9,
-                'aktif': True,
-                'kondisi': [
-                    ('G12', 'banyak'),
-                    ('G13', 'sedikit'),
-                ]
-            },
-
-            # P6 – Bercak Cercospora
-            {
-                'nama': 'RG-P6-1',
-                'kode_penyakit': 'P6',
-                'consequent_term': 'sedang',
-                'bobot': 1.0,
-                'aktif': True,
-                'kondisi': [
-                    ('G14', 'sedang'),
-                    ('G16', 'banyak'),
-                    ('G17', 'sedikit'),
-                ]
-            },
-
-            # P7 – Bercak Bakteri
-            {
-                'nama': 'RG-P7-1',
-                'kode_penyakit': 'P7',
-                'consequent_term': 'tinggi',
-                'bobot': 1.0,
-                'aktif': True,
-                'kondisi': [
-                    ('G8', 'sedang'),
-                    ('G18', 'banyak'),
-                    ('G21', 'sedikit'),
-                ]
-            },
-
-            # P8 – Antraknosa
-            {
-                'nama': 'RG-P8-1',
-                'kode_penyakit': 'P8',
-                'consequent_term': 'tinggi',
-                'bobot': 1.0,
-                'aktif': True,
-                'kondisi': [
-                    ('G11', 'banyak'),
-                    ('G19', 'banyak'),
-                    ('G20', 'sedang'),
-                ]
-            },
-
-            # P9 – Virus Gemini
-            {
-                'nama': 'RG-P9-1',
-                'kode_penyakit': 'P9',
-                'consequent_term': 'tinggi',
-                'bobot': 0.9,
-                'aktif': True,
-                'kondisi': [
-                    ('G15', 'banyak'),
-                    ('G17', 'sedang'),
-                    ('G23', 'banyak'),
-                ]
-            },
-
-            # P10 – Embun Tepung
-            {
-                'nama': 'RG-P10-1',
-                'kode_penyakit': 'P10',
-                'consequent_term': 'sedang',
-                'bobot': 0.9,
-                'aktif': True,
-                'kondisi': [
-                    ('G16', 'sedikit'),
-                    ('G24', 'banyak'),
-                    ('G15', 'sedang'),
-                ]
-            },
-
+    # P1 – Rebah Semai
+    {
+        'nama': 'RG-P1-1',
+        'kode_penyakit': 'P1',
+        'consequent_term': 'banyak',
+        'bobot': 1.0,
+        'aktif': True,
+        'kondisi': [
+            ('G1', 'banyak'),
+            ('G8', 'banyak'),
+            ('G11', 'sedang')
         ]
+    },
+
+    # P2 – Layu Bakteri
+    {
+        'nama': 'RG-P2-1',
+        'kode_penyakit': 'P2',
+        'consequent_term': 'banyak',
+        'bobot': 1.0,
+        'aktif': True,
+        'kondisi': [
+            ('G5', 'banyak'),
+            ('G11', 'banyak'),
+            ('G7', 'sedang')
+        ]
+    },
+
+    # P3 – Layu Fusarium
+    {
+        'nama': 'RG-P3-1',
+        'kode_penyakit': 'P3',
+        'consequent_term': 'banyak',
+        'bobot': 1.0,
+        'aktif': True,
+        'kondisi': [
+            ('G5', 'sedang'),
+            ('G11', 'banyak'),
+            ('G9', 'sedang')
+        ]
+    },
+
+    # P4 – Busuk Phytophthora
+    {
+        'nama': 'RG-P4-1',
+        'kode_penyakit': 'P4',
+        'consequent_term': 'banyak',
+        'bobot': 1.0,
+        'aktif': True,
+        'kondisi': [
+            ('G7', 'banyak'),
+            ('G8', 'sedang'),
+            ('G10', 'banyak')
+        ]
+    },
+
+    # P5 – Kuncup Daun
+    {
+        'nama': 'RG-P5-1',
+        'kode_penyakit': 'P5',
+        'consequent_term': 'sedang',
+        'bobot': 0.9,
+        'aktif': True,
+        'kondisi': [
+            ('G4', 'banyak'),
+            ('G6', 'sedang')
+        ]
+    },
+
+    # P6 – Bercak Cercospora
+    {
+        'nama': 'RG-P6-1',
+        'kode_penyakit': 'P6',
+        'consequent_term': 'sedang',
+        'bobot': 1.0,
+        'aktif': True,
+        'kondisi': [
+            ('G1', 'sedang'),
+            ('G3', 'banyak'),
+            ('G8', 'sedikit')
+        ]
+    },
+
+    # P7 – Bercak Bakteri
+    {
+        'nama': 'RG-P7-1',
+        'kode_penyakit': 'P7',
+        'consequent_term': 'banyak',
+        'bobot': 1.0,
+        'aktif': True,
+        'kondisi': [
+            ('G2', 'banyak'),
+            ('G3', 'sedang')
+        ]
+    },
+
+    # P8 – Antraknosa
+    {
+        'nama': 'RG-P8-1',
+        'kode_penyakit': 'P8',
+        'consequent_term': 'banyak',
+        'bobot': 1.0,
+        'aktif': True,
+        'kondisi': [
+            ('G7', 'banyak'),
+            ('G10', 'sedang')
+        ]
+    },
+
+    # P9 – Virus Gemini
+    {
+        'nama': 'RG-P9-1',
+        'kode_penyakit': 'P9',
+        'consequent_term': 'banyak',
+        'bobot': 0.9,
+        'aktif': True,
+        'kondisi': [
+            ('G4', 'banyak'),
+            ('G5', 'banyak'),
+            ('G12', 'banyak')
+        ]
+    },
+
+    # P10 – Embun Tepung
+    {
+        'nama': 'RG-P10-1',
+        'kode_penyakit': 'P10',
+        'consequent_term': 'sedang',
+        'bobot': 0.9,
+        'aktif': True,
+        'kondisi': [
+            ('G5', 'sedikit'),
+            ('G1', 'sedikit')
+        ]
+    }
+]
+
 
         created = 0
         for ex in DATA_RULES:
