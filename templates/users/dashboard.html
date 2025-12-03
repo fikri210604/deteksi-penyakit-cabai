@@ -1,55 +1,205 @@
 {% extends 'app.html' %}
 {% block title %}Dashboard - Sistem Pakar Cabai{% endblock %}
+
 {% block content %}
-<div class="bg-white rounded shadow p-6">
-  <h1 class="text-xl font-semibold mb-4">Input Gejala</h1>
 
-  <form method="post" action="{{ url_for('diagnosis_bp.diagnose') }}" class="space-y-6">
-    
-    <p class="text-sm text-gray-600">
-      Tambahkan gejala dan pilih tingkat keparahannya, kemudian lakukan proses diagnosa.
-    </p>
+<!-- ====================== ANIMASI & STYLE PREMIUM ======================= -->
+<style>
+  @keyframes fadeInUp { 
+    from {opacity:0; transform:translateY(20px);} 
+    to {opacity:1; transform:translateY(0);} 
+  }
+  @keyframes slideInLeft { 
+    from {opacity:0; transform:translateX(-30px);} 
+    to {opacity:1; transform:translateX(0);} 
+  }
+  @keyframes bounce { 
+    0%,100%{transform:translateY(0);} 
+    50%{transform:translateY(-10px);} 
+  }
+  @keyframes sparkle { 
+    0%,100%{opacity:0; transform:scale(0);} 
+    50%{opacity:1; transform:scale(1);} 
+  }
 
-    <div id="rows" class="space-y-3">
-      <div class="grid md:grid-cols-2 gap-2 condition-row">
+  body {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  }
 
-        <!-- PILIH GEJALA -->
-        <select name="kode_gejala[]" class="border rounded w-full px-3 py-2" required>
-          <option value="">Pilih Gejala</option>
-          {% for s in symptoms %}
-            <option value="{{ s.kode }}">{{ s.kode }} - {{ s.nama }}</option>
-          {% endfor %}
-        </select>
+  /* CARD ANIMATION ONLY — sidebar tetap diam */
+  .card-container {
+    animation: fadeInUp 0.6s ease-out;
+    background: linear-gradient(to bottom, #ffffff 0%, #fffbfb 100%);
+    border: 2px solid #fecaca;
+  }
 
-        <!-- PILIH KETERANGAN FUZZY -->
-        <select name="term[]" class="border rounded w-full px-3 py-2" required>
-          <option value="">Pilih Tingkat Keparahan</option>
-          <option value="sedikit">Sedikit</option>
-          <option value="sedang">Sedang</option>
-          <option value="banyak">Banyak</option>
-        </select>
+  .header-section {
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+    position: relative;
+    overflow: hidden;
+  }
 
+  .header-section::before {
+    content:'';
+    position:absolute;
+    top:-50%; right:-10%;
+    width:200px; height:200px;
+    background:rgba(255,255,255,0.1);
+    border-radius:50%;
+    animation:pulse 3s infinite ease-in-out;
+  }
+
+  .sparkle {
+    position:absolute;
+    width:8px; height:8px;
+    background:#fbbf24;
+    border-radius:50%;
+    animation:sparkle 1.5s infinite;
+  }
+  .sparkle-1 { top:20px; right:80px; animation-delay:0s; }
+  .sparkle-2 { top:40px; right:40px; animation-delay:0.3s; }
+  .sparkle-3 { top:30px; right:120px; animation-delay:0.6s; }
+
+  .chili-emoji { animation: wiggle 2s infinite; display:inline-block; }
+  @keyframes wiggle {
+    0%,100%{transform:rotate(0deg);}
+    25%{transform:rotate(-5deg);}
+    75%{transform:rotate(5deg);}
+  }
+
+  .condition-row {
+    animation: slideInLeft 0.4s ease-out;
+    padding:15px;
+    border:2px solid #fecaca;
+    border-radius:12px;
+    background:white;
+  }
+
+  .condition-row:hover {
+    background:#fef2f2;
+    transform:translateX(5px);
+  }
+
+  .select-field {
+    border:2px solid #fecaca;
+    transition:all 0.3s;
+  }
+
+  .select-field:focus {
+    outline:none;
+    border-color:#dc2626;
+    box-shadow:0 0 0 3px rgba(220,38,38,0.1);
+  }
+
+  .btn-add {
+    background:linear-gradient(135deg,#dc2626,#ef4444);
+    color:white;
+    transition:0.3s;
+  }
+
+  .btn-add:hover {
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(220,38,38,0.35);
+  }
+
+  .btn-diagnose {
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+    color:white;
+    transition:0.3s;
+  }
+
+  .btn-diagnose:hover {
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(22,163,74,0.35);
+  }
+
+  .info-box {
+    background:linear-gradient(135deg,#fef3c7,#fde68a);
+    border-left:4px solid #f59e0b;
+    animation:fadeInUp 0.6s ease-out;
+  }
+</style>
+
+
+<!-- ======================== MAIN CONTENT WRAPPER (NO ANIMATION) ======================= -->
+<div class="max-w-4xl mx-auto">
+
+  <!-- =================== CARD WITH ANIMATION =================== -->
+  <div class="card-container rounded-2xl shadow-2xl overflow-hidden">
+
+    <!-- ============= HEADER ANIMATED ============ -->
+    <div class="header-section p-6 relative">
+      <div class="sparkle sparkle-1"></div>
+      <div class="sparkle sparkle-2"></div>
+      <div class="sparkle sparkle-3"></div>
+
+      <h1 class="text-3xl font-bold text-white flex items-center gap-3 relative z-10">
+        <span class="chili-emoji">🌶️</span>
+        Input Gejala Penyakit Cabai
+        <span class="chili-emoji" style="animation-delay:.5s;">🌶️</span>
+      </h1>
+
+      <p class="text-white/90 mt-1 relative z-10">Masukkan gejala untuk proses diagnosa</p>
+    </div>
+
+    <!-- =================== FORM CONTENT =================== -->
+    <div class="p-8">
+
+      <!-- INFO BOX -->
+      <div class="info-box p-4 rounded-xl mb-6 flex gap-3">
+        <span class="material-symbols-outlined text-amber-600 text-2xl">info</span>
+        <p class="text-gray-700 text-sm">
+          Pilih gejala yang terlihat pada tanaman cabai Anda, lalu tentukan tingkat keparahannya.
+        </p>
       </div>
-    </div>
 
-    <!-- TOMBOL TAMBAH BARIS INPUT -->
-    <div>
-      <button type="button" id="btnAdd" class="px-3 py-2 rounded border bg-red-600 text-white">
-        Tambah Gejala
-      </button>
-    </div>
+      <form method="post" action="{{ url_for('diagnosis_bp.diagnose') }}" class="space-y-6">
 
-    <!-- SUBMIT -->
-    <div class="flex justify-end">
-      <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-        Proses Diagnosa
-      </button>
-    </div>
+        <div id="rows" class="space-y-4">
 
-  </form>
+          <!-- FIRST ROW TEMPLATE -->
+          <div class="condition-row grid md:grid-cols-2 gap-3">
+
+            <!-- GEJALA -->
+            <select name="kode_gejala[]" class="select-field px-4 py-2.5 rounded-lg text-gray-700" required>
+              <option value="">🔍 Pilih Gejala</option>
+              {% for s in symptoms %}
+                <option value="{{ s.kode }}">{{ s.kode }} - {{ s.nama }}</option>
+              {% endfor %}
+            </select>
+
+            <!-- TINGKAT -->
+            <select name="term[]" class="select-field px-4 py-2.5 rounded-lg text-gray-700" required>
+              <option value="">📊 Pilih Tingkat Keparahan</option>
+              <option value="sedikit">😊 Sedikit</option>
+              <option value="sedang">😐 Sedang</option>
+              <option value="banyak">😟 Banyak</option>
+            </select>
+
+          </div>
+        </div>
+
+        <!-- ADD ROW BUTTON -->
+        <button type="button" id="btnAdd" 
+          class="btn-add px-5 py-3 rounded-xl font-semibold flex items-center gap-2">
+          <span class="material-symbols-outlined">add_circle</span>
+          Tambah Gejala Lain
+        </button>
+
+        <!-- SUBMIT -->
+        <div class="flex justify-end">
+          <button class="btn-diagnose px-6 py-3 rounded-xl font-bold flex items-center gap-2">
+            <span class="material-symbols-outlined">analytics</span>
+            Proses Diagnosa
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </div>
 
-<!-- JAVASCRIPT UNTUK MENAMBAHKAN BARIS BARU -->
+<!-- ====================== SCRIPT ROW CLONE ======================== -->
 <script>
 (function(){
   const btn = document.getElementById('btnAdd');
@@ -58,11 +208,11 @@
   btn.addEventListener('click', function() {
     const first = rows.querySelector('.condition-row');
     const clone = first.cloneNode(true);
-
     clone.querySelectorAll('select').forEach(s => s.value = '');
     rows.appendChild(clone);
-  });
 
+    clone.scrollIntoView({ behavior:'smooth', block:'center' });
+  });
 })();
 </script>
 

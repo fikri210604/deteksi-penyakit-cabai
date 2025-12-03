@@ -2,66 +2,117 @@
 {% block title %}Daftar - Sistem Pakar Cabai{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto mt-10 bg-white rounded-xl shadow-lg p-8 border border-gray-100">
+<style>
+  body {
+    background: url('{{ url_for("static", filename="images/background (2).jpg") }}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 
-  <!-- Judul -->
-  <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-    Buat Akun Baru
-  </h1>
+  .bg-chili {
+    background: url('{{ url_for("static", filename="images/logo sispak.png") }}');
+    background-size: cover;
+    background-position: center;
+  }
 
-  <form method="post" action="{{ url_for('auth_bp.register') }}" class="space-y-5">
+  .text-chili { color: #b91c1c; }
 
-    <!-- USERNAME -->
-    <div>
-      <label class="block text-sm font-medium mb-1 text-gray-700">Username</label>
-      <div class="relative">
-        <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-lg">
-          person
-        </span>
-        <input name="username" required
-               class="w-full border rounded-lg pl-10 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition" />
-      </div>
+  .gradient-red {
+    background: linear-gradient(135deg, #b91c1c, #ef4444);
+  }
+
+  /* =============== ANIMATIONS FROM DEMO =============== */
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .card-animate { animation: fadeInUp 0.8s ease-out forwards; }
+  .left-panel-animate { animation: slideInLeft 0.8s ease-out forwards; }
+  .right-panel-animate { animation: slideInRight 0.8s ease-out forwards; }
+
+  .form-group { 
+    opacity: 0; 
+    animation: fadeInUp 0.6s ease-out forwards; 
+  }
+
+  .form-group:nth-child(1) { animation-delay: 0.2s; }
+  .form-group:nth-child(2) { animation-delay: 0.3s; }
+  .form-group:nth-child(3) { animation-delay: 0.4s; }
+  .form-group:nth-child(4) { animation-delay: 0.5s; }
+</style>
+
+<div class="flex justify-center items-center min-h-[70vh] px-4">
+  <div class="w-full max-w-4xl rounded-2xl shadow-xl overflow-hidden flex bg-white card-animate">
+
+    <!-- LEFT IMAGE (with left animation) -->
+    <div class="w-1/2 bg-chili hidden md:block left-panel-animate"></div>
+
+    <!-- RIGHT FORM PANEL -->
+    <div class="w-full md:w-1/2 p-10 bg-white right-panel-animate">
+
+      <h1 class="text-3xl font-bold text-chili text-center mb-8">
+        Buat Akun Baru
+      </h1>
+
+      <form method="post" action="{{ url_for('auth_bp.register') }}" class="space-y-6">
+
+        <div class="form-group">
+          <label class="text-sm font-semibold text-chili">Username</label>
+          <input name="username" required
+                 placeholder="Masukkan Username"
+                 class="w-full border rounded-lg px-4 py-2.5 focus:outline-none 
+                        focus:ring-2 focus:ring-red-700 transition" />
+        </div>
+
+        <div class="form-group">
+          <label class="text-sm font-semibold text-chili">Email</label>
+          <input type="email" name="email" required
+                 placeholder="Masukkan Email"
+                 class="w-full border rounded-lg px-4 py-2.5 focus:outline-none 
+                        focus:ring-2 focus:ring-red-700 transition" />
+        </div>
+
+        <div class="form-group">
+          <label class="text-sm font-semibold text-chili">Password</label>
+          <input type="password" name="password" required
+                 placeholder="Masukkan Password"
+                 class="w-full border rounded-lg px-4 py-2.5 focus:outline-none 
+                        focus:ring-2 focus:ring-red-700 transition" />
+        </div>
+
+        <div class="form-group">
+          <button class="w-full py-2.5 text-white font-semibold rounded-lg gradient-red shadow
+                         hover:opacity-90 transition">
+            Daftar
+          </button>
+        </div>
+
+      </form>
+
+      <p class="text-sm text-gray-600 mt-6 text-center">
+        Sudah punya akun?
+        <a class="font-semibold text-chili hover:underline"
+           href="{{ url_for('auth_bp.login') }}">
+          Masuk di sini
+        </a>
+      </p>
+
     </div>
 
-    <!-- EMAIL -->
-    <div>
-      <label class="block text-sm font-medium mb-1 text-gray-700">Email</label>
-      <div class="relative">
-        <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-lg">
-          mail
-        </span>
-        <input type="email" name="email" required
-               class="w-full border rounded-lg pl-10 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition" />
-      </div>
-    </div>
-
-    <!-- PASSWORD -->
-    <div>
-      <label class="block text-sm font-medium mb-1 text-gray-700">Password</label>
-      <div class="relative">
-        <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-lg">
-          lock
-        </span>
-        <input type="password" name="password" required
-               class="w-full border rounded-lg pl-10 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition" />
-      </div>
-    </div>
-
-    <!-- BUTTON -->
-    <button class="w-full bg-green-600 text-white py-2.5 text-sm font-semibold rounded-lg 
-                   hover:bg-green-700 transition shadow">
-      Daftar
-    </button>
-  </form>
-
-  <!-- LOGIN -->
-  <p class="text-sm text-gray-600 mt-5 text-center">
-    Sudah punya akun?
-    <a class="text-green-700 hover:underline font-semibold"
-       href="{{ url_for('auth_bp.login') }}">
-       Masuk di sini
-    </a>
-  </p>
-
+  </div>
 </div>
+
 {% endblock %}
