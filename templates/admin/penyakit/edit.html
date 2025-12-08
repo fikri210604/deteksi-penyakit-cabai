@@ -1,32 +1,72 @@
 {% extends 'app.html' %}
 {% block title %}Edit Penyakit - Admin{% endblock %}
 {% block content %}
-<div class="max-w-xl bg-white rounded shadow p-6">
-  <h1 class="text-lg font-semibold mb-4">Edit Penyakit</h1>
-  <form method="post">
-    <div class="space-y-4">
-      <div>
-        <label class="block text-sm mb-1">Kode</label>
-        <input name="kode" value="{{ p.kode_penyakit }}" class="border rounded w-full px-3 py-2" required />
-      </div>
-      <div>
-        <label class="block text-sm mb-1">Nama</label>
-        <input name="nama" value="{{ p.nama }}" class="border rounded w-full px-3 py-2" required />
-      </div>
-      <div>
-        <label class="block text-sm mb-1">Deskripsi</label>
-        <textarea name="deskripsi" class="border rounded w-full px-3 py-2" rows="4">{{ p.deskripsi }}</textarea>
-      </div>
-      <div>
-        <label class="block text-sm mb-1">Solusi</label>
-        <textarea name="solusi" class="border rounded w-full px-3 py-2" rows="4">{{ p.solusi }}</textarea>
-      </div>
-    </div>
-    <div class="mt-6 flex gap-2">
-      <button class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
-      <a href="{{ url_for('penyakit_bp.index') }}" class="px-4 py-2 rounded border">Batal</a>
-    </div>
-  </form>
-</div>
-{% endblock %}
 
+<div class="max-w-xl mx-auto bg-white rounded-xl shadow p-6 border border-red-100">
+
+  <!-- Judul Tengah -->
+  <h1 class="text-2xl font-semibold text-red-600 mb-6 text-center">
+    Edit Data Penyakit
+  </h1>
+
+  <form method="post" class="space-y-5">
+
+    <!-- Kode -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Kode Penyakit</label>
+      <input 
+        name="kode"
+        value="{{ p.kode_penyakit }}"
+        class="border border-gray-300 rounded-lg w-full px-3 py-2 focus:ring-2 focus:ring-red-300 focus:outline-none"
+        required
+      />
+    </div>
+
+    <!-- Nama -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Nama Penyakit</label>
+      <input 
+        name="nama" 
+        value="{{ p.nama }}" 
+        class="border border-gray-300 rounded-lg w-full px-3 py-2 focus:ring-2 focus:ring-red-300 focus:outline-none"
+        required
+      />
+    </div>
+
+    <!-- Deskripsi -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+      <textarea 
+        name="deskripsi" 
+        rows="4"
+        class="border border-gray-300 rounded-lg w-full px-3 py-2 focus:ring-2 focus:ring-red-300 focus:outline-none"
+      >{{ p.deskripsi }}</textarea>
+    </div>
+
+    <!-- Solusi -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Solusi</label>
+      <textarea 
+        name="solusi" 
+        rows="4"
+        class="border border-gray-300 rounded-lg w-full px-3 py-2 focus:ring-2 focus:ring-red-300 focus:outline-none"
+      >{{ p.solusi }}</textarea>
+    </div>
+
+    <!-- Tombol Tengah -->
+    <div class="pt-2 flex justify-center gap-3">
+      <button class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow">
+        Simpan
+      </button>
+
+      <a href="{{ url_for('penyakit_bp.index') }}"
+         class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition">
+        Batal
+      </a>
+    </div>
+
+  </form>
+
+</div>
+
+{% endblock %}

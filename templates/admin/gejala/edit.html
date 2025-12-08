@@ -1,28 +1,75 @@
 {% extends 'app.html' %}
 {% block title %}Edit Gejala - Admin{% endblock %}
-{% block content %}
-<div class="max-w-xl bg-white rounded shadow p-6">
-  <h1 class="text-lg font-semibold mb-4">Edit Gejala</h1>
-  <form method="post">
-    <div class="space-y-4">
-      <div>
-        <label class="block text-sm mb-1">Kode</label>
-        <input name="kode" value="{{ gejala.kode }}" class="border rounded w-full px-3 py-2" required />
-      </div>
-      <div>
-        <label class="block text-sm mb-1">Nama</label>
-        <input name="nama" value="{{ gejala.nama }}" class="border rounded w-full px-3 py-2" required />
-      </div>
-      <div>
-        <label class="block text-sm mb-1">Deskripsi</label>
-        <textarea name="deskripsi" class="border rounded w-full px-3 py-2" rows="4">{{ gejala.deskripsi }}</textarea>
-      </div>
-    </div>
-    <div class="mt-6 flex gap-2">
-      <button class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
-      <a href="{{ url_for('gejala_bp.index') }}" class="px-4 py-2 rounded border">Batal</a>
-    </div>
-  </form>
-  </div>
-{% endblock %}
 
+{% block content %}
+<div class="flex justify-center">
+  <div class="w-full max-w-xl bg-white rounded-2xl shadow-md p-8 border border-gray-200">
+
+    <!-- Title -->
+    <h1 class="text-2xl font-bold text-center text-red-600 mb-6">
+      Edit Data Gejala
+    </h1>
+
+    <form method="post" class="space-y-6">
+
+      <!-- KODE -->
+      <div class="space-y-1">
+        <label class="block text-sm font-medium text-gray-700">Kode Gejala</label>
+        <input 
+          name="kode"
+          value="{{ gejala.kode }}"
+          class="border border-gray-300 rounded-lg w-full px-4 py-2.5
+                 focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400
+                 transition-all"
+          required
+        />
+      </div>
+
+      <!-- NAMA -->
+      <div class="space-y-1">
+        <label class="block text-sm font-medium text-gray-700">Nama Gejala</label>
+        <input 
+          name="nama"
+          value="{{ gejala.nama }}"
+          class="border border-gray-300 rounded-lg w-full px-4 py-2.5
+                 focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400
+                 transition-all"
+          required
+        />
+      </div>
+
+      <!-- DESKRIPSI -->
+      <div class="space-y-1">
+        <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
+        <textarea 
+          name="deskripsi"
+          class="border border-gray-300 rounded-lg w-full px-4 py-2.5 
+                 focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400
+                 transition-all"
+          rows="4"
+        >{{ gejala.deskripsi }}</textarea>
+      </div>
+
+      <!-- BUTTONS -->
+      <div class="pt-4 flex justify-center gap-3">
+
+        <!-- Save -->
+        <button 
+          class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 
+                 rounded-lg shadow transition-all">
+          Simpan
+        </button>
+
+        <!-- Cancel -->
+        <a 
+          href="{{ url_for('gejala_bp.index') }}" 
+          class="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 
+                 hover:bg-gray-100 transition-all">
+          Batal
+        </a>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock %}

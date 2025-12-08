@@ -1,50 +1,118 @@
 {% extends 'app.html' %}
-{% block title %}Admin - Sistem Pakar Cabai{% endblock %}
+{% block title %}Dashboard Admin - Sistem Pakar Cabai{% endblock %}
 {% block content %}
-<div class="grid md:grid-cols-2 gap-6">
-  <div class="bg-white rounded shadow p-6">
-    <h2 class="text-lg font-semibold mb-3">Statistik</h2>
-    <div class="grid grid-cols-2 gap-3 text-sm">
-      <div class="p-3 bg-gray-50 rounded">User: <span class="font-semibold">{{ total_user }}</span></div>
-      <div class="p-3 bg-gray-50 rounded">Gejala: <span class="font-semibold">{{ total_gejala }}</span></div>
-      <div class="p-3 bg-gray-50 rounded">Penyakit: <span class="font-semibold">{{ total_penyakit }}</span></div>
-      <div class="p-3 bg-gray-50 rounded">Rule: <span class="font-semibold">{{ total_rule }}</span></div>
-      <div class="p-3 bg-gray-50 rounded col-span-2">Total Riwayat: <span class="font-semibold">{{ total_history }}</span></div>
+
+<div class="space-y-8">
+    
+    <div class="p-6 bg-red-50 rounded-xl border border-red-200 shadow-md">
+        <h1 class="text-3xl font-extrabold text-green-800 mb-2">Selamat Datang, Admin!</h1>
+        <p class="text-gray-600">Ringkasan cepat status sistem pakar pendeteksi penyakit cabai Anda.</p>
     </div>
-    <div class="mt-4 flex gap-2">
-      <a class="px-3 py-2 rounded border" href="{{ url_for('gejala_bp.index') }}">Kelola Gejala</a>
-      <a class="px-3 py-2 rounded border" href="{{ url_for('penyakit_bp.index') }}">Kelola Penyakit</a>
-      <a class="px-3 py-2 rounded border" href="{{ url_for('rule_bp.groups') }}">Kelola Rule</a>
+
+    <hr class="my-6 border-gray-200" />
+
+<h2 class="text-2xl font-semibold text-gray-700 mb-4">Statistik Sistem Utama</h2>
+<div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+
+    <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-100 transition duration-200 hover:shadow-xl hover:scale-[1.02] transform">
+        <p class="text-sm font-medium text-gray-500">Pengguna Terdaftar</p>
+        <p class="text-3xl font-bold text-indigo-600 mt-1">{{ total_user }}</p>
     </div>
-  </div>
-  <div class="bg-white rounded shadow p-6">
-    <h2 class="text-lg font-semibold mb-3">Riwayat Terbaru</h2>
-    <div class="overflow-x-auto">
-      <table class="min-w-full text-sm">
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="text-left px-3 py-2">Waktu</th>
-            <th class="text-left px-3 py-2">User</th>
-            <th class="text-left px-3 py-2">Penyakit</th>
-            <th class="text-left px-3 py-2">Skor</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for h in histories %}
-            <tr class="border-t">
-              <td class="px-3 py-2 whitespace-nowrap">{{ h.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
-              <td class="px-3 py-2">{{ h.user.username if h.user else '-' }}</td>
-              <td class="px-3 py-2">{{ h.nama_penyakit }}</td>
-              <td class="px-3 py-2">{{ (h.skor_fuzzy * 100) | round(1) }}%</td>
-            </tr>
-          {% else %}
-            <tr>
-              <td class="px-3 py-4 text-center text-gray-500" colspan="4">Belum ada riwayat.</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+
+    <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-100 transition duration-200 hover:shadow-xl hover:scale-[1.02] transform">
+        <p class="text-sm font-medium text-gray-500">Total Gejala</p>
+        <p class="text-3xl font-bold text-yellow-600 mt-1">{{ total_gejala }}</p>
     </div>
-  </div>
+
+    <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-100 transition duration-200 hover:shadow-xl hover:scale-[1.02] transform">
+        <p class="text-sm font-medium text-gray-500">Jenis Penyakit</p>
+        <p class="text-3xl font-bold text-red-600 mt-1">{{ total_penyakit }}</p>
+    </div>
+
+    <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-100 transition duration-200 hover:shadow-xl hover:scale-[1.02] transform">
+        <p class="text-sm font-medium text-gray-500">Total Rule</p>
+        <p class="text-3xl font-bold text-blue-600 mt-1">{{ total_rule }}</p>
+    </div>
+
+    <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-100 col-span-2 md:col-span-1 transition duration-200 hover:shadow-xl hover:scale-[1.02] transform">
+        <p class="text-sm font-medium text-gray-500">Total Riwayat Deteksi</p>
+        <p class="text-3xl font-bold text-green-600 mt-1">{{ total_history }}</p>
+    </div>
+
 </div>
+
+    
+    <hr class="my-6 border-gray-200" />
+
+    <div class="grid md:grid-cols-3 gap-6">
+
+        <div class="md:col-span-1 bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Manajemen Cepat</h2>
+
+            <div class="space-y-3">
+                <a class="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-gray-300 bg-gray-50 hover:bg-gray-100 transition" href="{{ url_for('gejala_bp.index') }}">
+                    <span class="font-medium text-gray-800">Kelola Gejala (IF)</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                </a>
+
+                <a class="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-gray-300 bg-gray-50 hover:bg-gray-100 transition" href="{{ url_for('penyakit_bp.index') }}">
+                    <span class="font-medium text-gray-800">Kelola Penyakit (THEN)</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </a>
+
+                <a class="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-gray-300 bg-gray-50 hover:bg-gray-100 transition" href="{{ url_for('rule_bp.groups') }}">
+                    <span class="font-medium text-gray-800">Kelola Rule Fuzzy</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="md:col-span-2 bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Riwayat Deteksi Terbaru</h2>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm divide-y divide-gray-200">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left px-4 py-3 font-semibold text-gray-600 tracking-wider">Waktu</th>
+                            <th class="text-left px-4 py-3 font-semibold text-gray-600 tracking-wider">User</th>
+                            <th class="text-left px-4 py-3 font-semibold text-gray-600 tracking-wider">Penyakit Terdeteksi</th>
+                            <th class="text-center px-4 py-3 font-semibold text-gray-600 tracking-wider">Skor (CF)</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-100">
+                        {% for h in histories %}
+                        <tr class="hover:bg-gray-50 transition duration-100 ease-in-out">
+                            <td class="px-4 py-3 whitespace-nowrap text-gray-600">{{ h.timestamp.strftime('%d %b %Y, %H:%M') }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-800">{{ h.user.username if h.user else 'Anonim' }}</td>
+                            <td class="px-4 py-3 font-medium text-red-700">{{ h.nama_penyakit }}</td>
+                            <td class="px-4 py-3 text-center">
+                                <span class="font-bold text-sm {% if h.skor_fuzzy * 100 >= 70 %}text-red-600{% elif h.skor_fuzzy * 100 >= 40 %}text-orange-500{% else %}text-green-600{% endif %}">
+                                    {{ (h.skor_fuzzy * 100) | round(1) }}%
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td class="px-4 py-8 text-center text-gray-500 bg-gray-50" colspan="4">
+                                <p class="text-lg">Riwayat deteksi masih kosong.</p>
+                                <p class="text-sm">Ajak pengguna untuk mulai mendiagnosis!</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 {% endblock %}
