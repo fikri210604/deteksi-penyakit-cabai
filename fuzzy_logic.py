@@ -3,153 +3,165 @@ from models import Penyakit, RuleGroup
 
 class FuzzyLogic:
     """
-    Fuzzy Inference System (Sugeno) sederhana untuk diagnosa penyakit cabai.
-    - 3 himpunan fuzzy: sedikit, sedang, banyak
-    - Konsekuen Sugeno berupa konstanta z di skala 0..1
+    Fuzzy Inference System (Tsukamoto) untuk diagnosa penyakit cabai.
+    Input gejala 0..1.
+    Himpunan fuzzy gejala: tidak, sedikit, sedang, banyak.
     """
 
-    # Nilai konsekuen (z) Sugeno untuk setiap term output
-    Z = {
-        "sedikit": 0.2,
-        "sedang": 0.5,
-        "banyak": 0.8,
+    TERM_ALIASES = {
+        "T": "tidak",
+        "TIDAK": "tidak",
+        "TIDAK_ADA": "tidak",
+
+        "S": "sedikit",
+        "SEDIKIT": "sedikit",
+
+        "D": "sedang",
+        "SEDANG": "sedang",
+
+        "B": "banyak",
+        "BANYAK": "banyak",
+        # tambahan agar term admin 'sangat_banyak' dipetakan ke 'banyak'
+        "SB": "banyak",
+        "SANGAT_BANYAK": "banyak",
     }
 
     def __init__(self):
-        # Ambil seluruh rule group dari database
         self.groups = RuleGroup.query.all()
 
     # --------------------------------------------------
-    # 1. FUZZIFIKASI
+    # 1. FUZZIFIKASI (0..1)
     # --------------------------------------------------
-    def fuzzifikasi(self, x: float) -> dict:
-        """
-        Mengubah nilai crisp (0..1) menjadi derajat keanggotaan
-        untuk 3 himpunan fuzzy: sedikit, sedang, banyak.
-        """
-        x = max(0.0, min(1.0, float(x)))
+    def fuzzifikasi(self, x):
+        x = max(0.0, min(1.0, x))
 
-        # sedikit: tinggi di dekat 0, turun ke 0 saat x >= 0.4
-        if x <= 0.4:
-            sedikit = 1.0 - (x / 0.4)
+        # -----------------
+        # TIDAK ADA
+        # -----------------
+        if x <= 0.0:
+            tidak = 1.0
+        elif x <= 0.2:
+            tidak = (0.2 - x) / 0.2
+        else:
+            tidak = 0.0
+
+        # -----------------
+        # SEDIKIT
+        # -----------------
+        if x <= 0.0 or x >= 0.6:
+            sedikit = 0.0
+        elif 0.0 < x <= 0.4:
+            sedikit = (x - 0.0) / 0.4
+        elif 0.4 < x < 0.6:
+            sedikit = (0.6 - x) / 0.2
         else:
             sedikit = 0.0
 
-        # sedang: segitiga sekitar 0.5 (0.3–0.7)
-        if 0.3 <= x <= 0.5:
+        # -----------------
+        # SEDANG
+        # -----------------
+        if x <= 0.3 or x >= 0.7:
+            sedang = 0.0
+        elif 0.3 < x <= 0.5:
             sedang = (x - 0.3) / 0.2
-        elif 0.5 < x <= 0.7:
+        elif 0.5 < x < 0.7:
             sedang = (0.7 - x) / 0.2
         else:
             sedang = 0.0
 
-        # banyak: naik mulai 0.6, penuh di 1.0
-        if x >= 0.6:
-            if x < 1.0:
-                banyak = (x - 0.6) / 0.4
-            else:
-                banyak = 1.0
-        else:
+        # -----------------
+        # BANYAK
+        # -----------------
+        if x <= 0.5:
             banyak = 0.0
+        elif 0.5 < x <= 0.7:
+            banyak = (x - 0.5) / 0.2
+        else:
+            banyak = 1.0
 
         return {
-            "sedikit": max(0.0, min(1.0, sedikit)),
-            "sedang": max(0.0, min(1.0, sedang)),
-            "banyak": max(0.0, min(1.0, banyak)),
+            "tidak": tidak,
+            "sedikit": sedikit,
+            "sedang": sedang,
+            "banyak": banyak,
         }
 
+
     # --------------------------------------------------
-    # 2. EVALUASI SATU RULE-GROUP (INFERENSI)
+    # 1B. Ambil derajat keanggotaan berdasarkan term rule (S/D/B/T)
+    # --------------------------------------------------
+    def _get_membership_for_term(self, x, term):
+        mu = self.fuzzifikasi(x)
+        if not term:
+            return 0.0
+
+        key = term.strip().upper()
+        key_norm = self.TERM_ALIASES.get(key, key.lower())
+        return mu.get(key_norm, 0.0)
+
+    # --------------------------------------------------
+    # 2. EVALUASI RULE
     # --------------------------------------------------
     def evaluasi_rule(self, group, gejala_input: dict):
-        """
-        Menghitung derajat kebenaran (alpha) untuk satu rule-group.
-        - Jika ada gejala dalam rule yang tidak diisi user → rule di-skip (None).
-        - alpha = min(µ_1, µ_2, ..., µ_n)   (operator AND = MIN)
-        """
         alphas = []
 
         for cond in group.kondisi:
-            kode = cond.kode_gejala
+            kode = (cond.kode_gejala or "").strip()
+            if not kode:
+                continue
 
-            # Jika gejala yang menjadi syarat rule tidak diisi user → rule tidak aktif
+            term = (cond.antecedent_term or "").strip().upper()
+
             if kode not in gejala_input:
+                if term in ("T", "TIDAK", "TIDAK_ADA"):
+                    alphas.append(1.0)
+                    continue
                 return None
 
-            x = gejala_input[kode]           # nilai crisp 0..1 dari user
-            mu = self.fuzzifikasi(x)         # derajat keanggotaan
-            alpha_i = mu.get(cond.antecedent_term, 0.0)
+
+            x = float(gejala_input[kode])
+
+            alpha_i = self._get_membership_for_term(x, cond.antecedent_term)
             alphas.append(alpha_i)
 
+        # Tidak ada kondisi yang dipakai → rule tidak dipakai
         if not alphas:
             return None
 
-        alpha = min(alphas)  # AND menggunakan MIN
+        alpha = min(alphas)
         if alpha <= 0.0:
-            return None      # rule tidak berkontribusi
+            return None
 
-        # Ambil nilai konsekuen (z) Sugeno
-        if group.z_override is not None:
-            z = float(group.z_override)
-        else:
-            z = self.Z.get(group.consequent_term, 0.5)
-
+        z = alpha  # Tsukamoto: μ(z) = z
         return alpha, z, group.kode_penyakit
 
+
     # --------------------------------------------------
-    # 3. DEFUZZIFIKASI (WEIGHTED AVERAGE)
+    # 3. DEFUZZIFIKASI TSUKAMOTO
     # --------------------------------------------------
     def defuzzifikasi(self, rule_list):
-        """
-        Menghitung:
-        - z_global  : nilai fuzzy gabungan semua rule (0..1)
-        - skor_map  : skor per penyakit {kode_penyakit: skor (0..1)}
-
-        Rumus per penyakit:
-            skor_k = Σ(alpha_i * z_i) / Σ alpha_i
-        Rumus global:
-            z_global = Σ(alpha_i * z_i) / Σ alpha_i  (semua rule)
-        """
         if not rule_list:
             return 0.0, {}
 
-        # Akumulator global dan per penyakit
-        total_alpha = 0.0
-        total_alpha_z = 0.0
-
-        num_per_penyakit = {}  # Σ(alpha*z) per penyakit
-        den_per_penyakit = {}  # Σ(alpha)   per penyakit
+        num = {}
+        den = {}
 
         for alpha, z, kode in rule_list:
-            if alpha <= 0.0:
+            if alpha <= 0: 
                 continue
 
-            alpha_z = alpha * z
+            if kode not in num:
+                num[kode] = 0.0
+                den[kode] = 0.0
 
-            # global
-            total_alpha += alpha
-            total_alpha_z += alpha_z
+            num[kode] += alpha * z
+            den[kode] += alpha
 
-            # per penyakit
-            if kode not in num_per_penyakit:
-                num_per_penyakit[kode] = 0.0
-                den_per_penyakit[kode] = 0.0
-
-            num_per_penyakit[kode] += alpha_z
-            den_per_penyakit[kode] += alpha
-
-        if total_alpha == 0.0:
-            return 0.0, {}
-
-        z_global = total_alpha_z / total_alpha
-
-        # skor per penyakit (0..1)
         skor_map = {}
-        for kode in num_per_penyakit:
-            if den_per_penyakit[kode] > 0:
-                skor_map[kode] = num_per_penyakit[kode] / den_per_penyakit[kode]
-            else:
-                skor_map[kode] = 0.0
+        for kode in num:
+            skor_map[kode] = num[kode] / den[kode] if den[kode] > 0 else 0.0
+
+        z_global = max(skor_map.values()) if skor_map else 0.0
 
         return z_global, skor_map
 
@@ -157,22 +169,14 @@ class FuzzyLogic:
     # 4. DIAGNOSA
     # --------------------------------------------------
     def diagnosa(self, gejala_input: dict):
-        """
-        gejala_input: dict {"G1": 0.2, "G3": 0.7, ...} nilai 0..1
-        Mengembalikan:
-        - penyakit terbaik (nama)
-        - nilai_fuzzy (skor 0..1 untuk penyakit terbaik)
-        - skor_penyakit: dict {kode_penyakit: skor 0..1}
-        """
+
         hasil_rules = []
 
-        # Evaluasi semua rule-group
         for grp in self.groups:
             out = self.evaluasi_rule(grp, gejala_input)
             if out:
                 hasil_rules.append(out)
 
-        # Defuzzifikasi
         _, skor_map = self.defuzzifikasi(hasil_rules)
 
         if not skor_map:
@@ -182,15 +186,11 @@ class FuzzyLogic:
                 "skor_penyakit": {},
             }
 
-        # Ambil penyakit dengan skor tertinggi
         kode_terbaik = max(skor_map, key=skor_map.get)
         penyakit_obj = Penyakit.query.filter_by(kode_penyakit=kode_terbaik).first()
 
-        nama = penyakit_obj.nama if penyakit_obj else kode_terbaik
-        skor_terbaik = skor_map[kode_terbaik]  # 0..1
-
         return {
-            "penyakit": nama,
-            "nilai_fuzzy": skor_terbaik,   # 0..1 → kalikan 100 di tampilan
-            "skor_penyakit": skor_map,     # semua skor penyakit (0..1)
+            "penyakit": penyakit_obj.nama if penyakit_obj else kode_terbaik,
+            "nilai_fuzzy": skor_map[kode_terbaik],
+            "skor_penyakit": skor_map,
         }

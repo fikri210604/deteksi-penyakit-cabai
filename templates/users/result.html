@@ -16,9 +16,10 @@
     </p>
 
     {% if info %}
-    <div class="pt-2 text-sm text-gray-600">
-      Info: {{ info.nama }}
-    </div>
+    <p>
+      <span class="font-medium">Solusi:</span>
+      {{ info.solusi }}
+    </p>
     {% endif %}
   </div>
 
@@ -36,7 +37,8 @@
     <script>
       (function () {
         const skor = {{ result.get('skor_penyakit', {}) | tojson }};
-        const labels = Object.keys(skor);
+        const diseaseMap = {{ penyakit_map | tojson }};
+        const labels = Object.keys(skor).map(k => `${k} - ${diseaseMap[k] || k}`);
         const values = Object.values(skor);
         const total = values.reduce((a, b) => a + b, 0);
 
@@ -88,27 +90,30 @@
     {% endif %}
   </div>
 
-  <!-- Tombol Aksi -->
-  <div class="mt-6 flex gap-2 no-print">
-    <button id="btnPrint" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-      Cetak PDF
-    </button>
-
-    <button id="btnDownloadPNG" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">
-      Unduh PNG
-    </button>
-
-    <a href="{{ url_for('user_bp.dashboard') }}"
-       class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-      Kembali
-    </a>
-
-    <a href="{{ url_for('user_bp.history') }}"
-       class="bg-gray-100 text-gray-800 px-4 py-2 rounded hover:bg-gray-200">
-      Lihat Riwayat
-    </a>
+  <div class="mt-6">
+    <h2 class="text-lg font-semibold mb-3">Gejala yang Anda Masukkan</h2>
+  
+    <table class="w-full text-sm border">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="border px-2 py-1">Kode</th>
+          <th class="border px-2 py-1">Nama Gejala</th>
+          <th class="border px-2 py-1">Tingkat Fuzzy</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for kode, info in gejala_linguistik.items() %}
+        {% set g = symptoms_map.get(kode) if symptoms_map else None %}
+        <tr>
+          <td class="border px-2 py-1 text-center">{{ kode }}</td>
+          <td class="border px-2 py-1">{{ g.nama if g else 'Gejala Tidak Ditemukan' }}</td>
+          <td class="border px-2 py-1 text-center">{{ info.label }} ({{ info.x | round(2) }})</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
-</div>
+  
 
 <!-- Aksi tombol -->
 <script>

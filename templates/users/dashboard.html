@@ -3,217 +3,159 @@
 
 {% block content %}
 
-<!-- ====================== ANIMASI & STYLE PREMIUM ======================= -->
 <style>
-  @keyframes fadeInUp { 
-    from {opacity:0; transform:translateY(20px);} 
-    to {opacity:1; transform:translateY(0);} 
-  }
-  @keyframes slideInLeft { 
-    from {opacity:0; transform:translateX(-30px);} 
-    to {opacity:1; transform:translateX(0);} 
-  }
-  @keyframes bounce { 
-    0%,100%{transform:translateY(0);} 
-    50%{transform:translateY(-10px);} 
-  }
-  @keyframes sparkle { 
-    0%,100%{opacity:0; transform:scale(0);} 
-    50%{opacity:1; transform:scale(1);} 
-  }
+  @keyframes fadeInUp { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+  @keyframes slideInLeft { from {opacity:0; transform:translateX(-30px);} to {opacity:1; transform:translateX(0);} }
+  @keyframes sparkle { 0%,100% {opacity:0; transform:scale(0);} 50% {opacity:1; transform:scale(1);} }
 
-  body {
-    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-  }
+  body { background: linear-gradient(135deg,#fef2f2,#fee2e2); }
 
-  /* CARD ANIMATION ONLY — sidebar tetap diam */
   .card-container {
-    animation: fadeInUp 0.6s ease-out;
-    background: linear-gradient(to bottom, #ffffff 0%, #fffbfb 100%);
+    animation: fadeInUp .6s ease-out;
+    background: linear-gradient(to bottom,#fff,#fffbfb);
     border: 2px solid #fecaca;
   }
 
   .header-section {
-    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-    position: relative;
-    overflow: hidden;
+    background: linear-gradient(135deg,#dc2626,#ef4444);
+    position: relative; overflow: hidden;
   }
 
-  .header-section::before {
-    content:'';
-    position:absolute;
-    top:-50%; right:-10%;
-    width:200px; height:200px;
-    background:rgba(255,255,255,0.1);
-    border-radius:50%;
-    animation:pulse 3s infinite ease-in-out;
-  }
-
-  .sparkle {
-    position:absolute;
-    width:8px; height:8px;
-    background:#fbbf24;
-    border-radius:50%;
-    animation:sparkle 1.5s infinite;
-  }
-  .sparkle-1 { top:20px; right:80px; animation-delay:0s; }
-  .sparkle-2 { top:40px; right:40px; animation-delay:0.3s; }
-  .sparkle-3 { top:30px; right:120px; animation-delay:0.6s; }
-
-  .chili-emoji { animation: wiggle 2s infinite; display:inline-block; }
-  @keyframes wiggle {
-    0%,100%{transform:rotate(0deg);}
-    25%{transform:rotate(-5deg);}
-    75%{transform:rotate(5deg);}
-  }
+  .sparkle { position: absolute; width: 8px; height: 8px; background: #fbbf24; border-radius: 50%; animation: sparkle 1.5s infinite; }
+  .sparkle-1 { top:20px; right:80px; }
+  .sparkle-2 { top:40px; right:40px; animation-delay:.2s; }
+  .sparkle-3 { top:30px; right:120px; animation-delay:.4s; }
 
   .condition-row {
-    animation: slideInLeft 0.4s ease-out;
-    padding:15px;
-    border:2px solid #fecaca;
-    border-radius:12px;
-    background:white;
+    animation: slideInLeft .4s ease-out;
+    padding: 15px;
+    border: 2px solid #fecaca;
+    border-radius: 12px;
+    background: #fff;
   }
 
-  .condition-row:hover {
-    background:#fef2f2;
-    transform:translateX(5px);
-  }
-
-  .select-field {
-    border:2px solid #fecaca;
-    transition:all 0.3s;
-  }
-
-  .select-field:focus {
-    outline:none;
-    border-color:#dc2626;
-    box-shadow:0 0 0 3px rgba(220,38,38,0.1);
+  .slider-tooltip {
+    font-size: .85rem; font-weight: 600; margin-top:4px; color:#dc2626;
   }
 
   .btn-add {
-    background:linear-gradient(135deg,#dc2626,#ef4444);
-    color:white;
-    transition:0.3s;
+    background: linear-gradient(135deg,#dc2626,#ef4444);
+    color:#fff; transition:.3s;
   }
-
-  .btn-add:hover {
-    transform:translateY(-3px);
-    box-shadow:0 8px 20px rgba(220,38,38,0.35);
-  }
+  .btn-add:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(220,38,38,.35); }
 
   .btn-diagnose {
-    background:linear-gradient(135deg,#16a34a,#22c55e);
-    color:white;
-    transition:0.3s;
+    background: linear-gradient(135deg,#16a34a,#22c55e);
+    color:#fff; transition:.3s;
   }
-
-  .btn-diagnose:hover {
-    transform:translateY(-3px);
-    box-shadow:0 8px 20px rgba(22,163,74,0.35);
-  }
-
-  .info-box {
-    background:linear-gradient(135deg,#fef3c7,#fde68a);
-    border-left:4px solid #f59e0b;
-    animation:fadeInUp 0.6s ease-out;
-  }
+  .btn-diagnose:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(22,163,74,.35); }
 </style>
 
 
-<!-- ======================== MAIN CONTENT WRAPPER (NO ANIMATION) ======================= -->
 <div class="max-w-4xl mx-auto">
-
-  <!-- =================== CARD WITH ANIMATION =================== -->
   <div class="card-container rounded-2xl shadow-2xl overflow-hidden">
 
-    <!-- ============= HEADER ANIMATED ============ -->
     <div class="header-section p-6 relative">
       <div class="sparkle sparkle-1"></div>
       <div class="sparkle sparkle-2"></div>
       <div class="sparkle sparkle-3"></div>
 
-      <h1 class="text-3xl font-bold text-white flex items-center gap-3 relative z-10">
-        <span class="chili-emoji">🌶️</span>
-        Input Gejala Penyakit Cabai
-        <span class="chili-emoji" style="animation-delay:.5s;">🌶️</span>
-      </h1>
-
-      <p class="text-white/90 mt-1 relative z-10">Masukkan gejala untuk proses diagnosa</p>
+      <h1 class="text-3xl font-bold text-white relative z-10">🌶️ Input Gejala Penyakit Cabai 🌶️</h1>
+      <p class="text-white/80 mt-1 relative z-10">Masukkan gejala dan tingkat keparahannya.</p>
     </div>
 
-    <!-- =================== FORM CONTENT =================== -->
     <div class="p-8">
-
-      <!-- INFO BOX -->
-      <div class="info-box p-4 rounded-xl mb-6 flex gap-3">
-        <span class="material-symbols-outlined text-amber-600 text-2xl">info</span>
-        <p class="text-gray-700 text-sm">
-          Pilih gejala yang terlihat pada tanaman cabai Anda, lalu tentukan tingkat keparahannya.
-        </p>
-      </div>
-
       <form method="post" action="{{ url_for('diagnosis_bp.diagnose') }}" class="space-y-6">
 
         <div id="rows" class="space-y-4">
 
-          <!-- FIRST ROW TEMPLATE -->
-          <div class="condition-row grid md:grid-cols-2 gap-3">
+          <div class="condition-row">
 
-            <!-- GEJALA -->
-            <select name="kode_gejala[]" class="select-field px-4 py-2.5 rounded-lg text-gray-700" required>
-              <option value="">🔍 Pilih Gejala</option>
+            <label class="text-gray-700 text-sm mb-1 block">Gejala</label>
+            <select name="kode_gejala[]" class="gjl-select w-full px-4 py-2.5 rounded-lg border-2 border-red-200">
               {% for s in symptoms %}
-                <option value="{{ s.kode }}">{{ s.kode }} - {{ s.nama }}</option>
+              <option value="{{ s.kode }}">{{ s.kode }} - {{ s.nama }}</option>
               {% endfor %}
             </select>
 
-            <!-- TINGKAT -->
-            <select name="term[]" class="select-field px-4 py-2.5 rounded-lg text-gray-700" required>
-              <option value="">📊 Pilih Tingkat Keparahan</option>
-              <option value="sedikit">😊 Sedikit</option>
-              <option value="sedang">😐 Sedang</option>
-              <option value="banyak">😟 Banyak</option>
-            </select>
+            <label class="text-gray-700 text-sm mt-4 block">Tingkat Keparahan</label>
+            <input type="range" min="0" max="100" step="1" value="0" 
+                   class="w-full accent-red-600"
+                   data-slider oninput="updateLabel(this)">
+            <div class="slider-tooltip">Tidak Ada (0.00)</div>
+
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+              <span>0 (Tidak)</span><span>25 (Sedikit)</span><span>50 (Sedang)</span><span>75 (Banyak)</span><span>100</span>
+            </div>
 
           </div>
+
         </div>
 
-        <!-- ADD ROW BUTTON -->
-        <button type="button" id="btnAdd" 
-          class="btn-add px-5 py-3 rounded-xl font-semibold flex items-center gap-2">
-          <span class="material-symbols-outlined">add_circle</span>
-          Tambah Gejala Lain
+        <button type="button" id="btnAdd" class="btn-add px-5 py-3 rounded-xl font-semibold flex items-center gap-2 mt-4">
+          <span class="material-symbols-outlined">add_circle</span> Tambah Gejala Lain
         </button>
 
-        <!-- SUBMIT -->
         <div class="flex justify-end">
           <button class="btn-diagnose px-6 py-3 rounded-xl font-bold flex items-center gap-2">
-            <span class="material-symbols-outlined">analytics</span>
-            Proses Diagnosa
+            <span class="material-symbols-outlined">analytics</span> Proses Diagnosa
           </button>
         </div>
 
       </form>
     </div>
+
   </div>
 </div>
 
-<!-- ====================== SCRIPT ROW CLONE ======================== -->
-<script>
-(function(){
-  const btn = document.getElementById('btnAdd');
-  const rows = document.getElementById('rows');
 
-  btn.addEventListener('click', function() {
-    const first = rows.querySelector('.condition-row');
+<script>
+function updateLabel(slider) {
+    let v = parseFloat(slider.value);
+    let x = v / 100;
+
+    let label = (v <= 10) ? "Tidak Ada"
+             : (v <= 35) ? "Sedikit"
+             : (v <= 60) ? "Sedang"
+             : (v <= 85) ? "Banyak"
+             : "Sangat Banyak";
+
+    slider.parentElement.querySelector(".slider-tooltip").innerHTML =
+        `${label} (${x.toFixed(2)})`;
+}
+
+function attachName(row) {
+    const select = row.querySelector(".gjl-select");
+    const slider = row.querySelector("[data-slider]");
+
+    function updateName() {
+        if (select.value) slider.name = `nilai[${select.value}]`;
+        else slider.removeAttribute("name");
+    }
+
+    updateName();
+    select.addEventListener("change", updateName);
+}
+
+document.querySelectorAll(".condition-row").forEach(r => attachName(r));
+
+document.getElementById("btnAdd").addEventListener("click", function () {
+    const rows = document.getElementById("rows");
+    const first = rows.querySelector(".condition-row");
+
     const clone = first.cloneNode(true);
-    clone.querySelectorAll('select').forEach(s => s.value = '');
+
+    clone.querySelector(".gjl-select").value = "";
+    const slider = clone.querySelector("[data-slider]");
+    slider.value = 0;
+    slider.removeAttribute("name");
+    clone.querySelector(".slider-tooltip").innerHTML = "Tidak Ada (0.00)";
+
     rows.appendChild(clone);
 
-    clone.scrollIntoView({ behavior:'smooth', block:'center' });
-  });
-})();
+    attachName(clone);
+    clone.scrollIntoView({ behavior: "smooth", block: "center" });
+});
 </script>
 
 {% endblock %}

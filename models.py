@@ -12,7 +12,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(255))
     role = db.Column(db.String(10), default="user")
-    histories = db.relationship("History", backref="user", lazy=True)
+    histories = db.relationship("History", back_populates="user", lazy=True)
 
 
 class Gejala(db.Model):
@@ -32,43 +32,30 @@ class Penyakit(db.Model):
     solusi = db.Column(db.Text)
 
 class RuleGroup(db.Model):
-    """
-    Satu rule fuzzy (Sugeno) untuk suatu penyakit.
-    Contoh:
-      IF (G1 sedikit AND G3 banyak) THEN P3 banyak
-    disimpan sebagai:
-      - 1 row di RuleGroup
-      - beberapa row di RuleCondition
-    """
     __tablename__ = "rule_groups"
     id = db.Column(db.Integer, primary_key=True)
     nama = db.Column(db.String(100))
-    kode_penyakit = db.Column(db.String(10),db.ForeignKey("penyakit.kode_penyakit"),nullable=False,)
-    consequent_term = db.Column(db.String(20), nullable=False)
-    bobot = db.Column(db.Float, default=1.0)
+    kode_penyakit = db.Column(db.String(10),db.ForeignKey("penyakit.kode_penyakit"),nullable=False)
     aktif = db.Column(db.Boolean, default=True)
-    z_override = db.Column(db.Float, nullable=True)
-    keterangan = db.Column(db.Text, nullable=True)
-    kondisi = db.relationship("RuleCondition",backref="group", cascade="all, delete-orphan",lazy=True,)
+    kondisi = db.relationship("RuleCondition",backref="group",cascade="all, delete-orphan",lazy=True)
+
 
 class RuleCondition(db.Model):
-    """
-    Antecedent (bagian IF) dari rule fuzzy.
-    Satu RuleGroup punya banyak RuleCondition.
-    """
     __tablename__ = "rule_conditions"
-
     id = db.Column(db.Integer, primary_key=True)
-    group_id = db.Column(db.Integer,db.ForeignKey("rule_groups.id"),nullable=False)
-    kode_gejala = db.Column(db.String(10),db.ForeignKey("gejala.kode"),nullable=False,)
-    antecedent_term = db.Column(db.String(20), nullable=False) 
+    group_id = db.Column(db.Integer, db.ForeignKey("rule_groups.id"), nullable=False)
+    kode_gejala = db.Column(db.String(10), nullable=False)
+    antecedent_term = db.Column(db.String(10), nullable=False)  # S/D/B/T
+
 
 class History(db.Model):
     __tablename__ = "history"
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"),nullable=False,)
-    kode_penyakit = db.Column(db.String(10), nullable=False)
-    nama_penyakit = db.Column(db.String(50), nullable=False)
+    kode_penyakit = db.Column(db.String(10), nullable=True)
+    nama_penyakit = db.Column(db.String(50), nullable=True)
     skor_fuzzy = db.Column(db.Float, nullable=False)
     gejala_terpilih = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    user = db.relationship("User", back_populates="histories")
+

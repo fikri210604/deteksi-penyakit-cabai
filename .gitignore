@@ -4,3 +4,5 @@ __pycache__/
 *.pyd
 venv/
 .env
+__pycache__
+database/__pycache__
