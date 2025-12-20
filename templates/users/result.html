@@ -38,8 +38,12 @@
       (function () {
         const skor = {{ result.get('skor_penyakit', {}) | tojson }};
         const diseaseMap = {{ penyakit_map | tojson }};
-        const labels = Object.keys(skor).map(k => `${k} - ${diseaseMap[k] || k}`);
-        const values = Object.values(skor);
+
+        // Hanya ikutkan penyakit dengan nilai > epsilon (hilangkan angka yang tidak masuk)
+        const EPS = 1e-6;
+        const entries = Object.entries(skor).filter(([, v]) => (Number(v) || 0) > EPS);
+        const labels = entries.map(([k]) => `${k} - ${diseaseMap[k] || k}`);
+        const values = entries.map(([, v]) => Number(v) || 0);
         const total = values.reduce((a, b) => a + b, 0);
 
         const baseColors = [
@@ -68,6 +72,11 @@
             plugins: {
               legend: { position: 'bottom' },
               tooltip: {
+                // Jangan tampilkan tooltip untuk nilai yang sangat kecil/0
+                filter: (item) => {
+                  const v = Number(item.raw || 0);
+                  return v > EPS;
+                },
                 callbacks: {
                   label: (context) => {
                     const label = context.label || '';
@@ -113,6 +122,126 @@
       </tbody>
     </table>
   </div>
+  
+  {% set exp = result.get('explanation') %}
+  {% if exp %}
+  <div class="mt-6">
+    <h2 class="text-lg font-semibold mb-3">Penjelasan Perhitungan Fuzzy</h2>
+
+    <div class="space-y-6">
+      <div>
+        <h3 class="font-medium mb-2">1) Fuzzifikasi Input</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="border px-2 py-1">Gejala</th>
+                <th class="border px-2 py-1">x (0..1)</th>
+                <th class="border px-2 py-1">Sedikit</th>
+                <th class="border px-2 py-1">Sedang</th>
+                <th class="border px-2 py-1">Banyak</th>
+                <th class="border px-2 py-1">Bobot Gejala</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for k, d in exp.inputs.items() %}
+              {% set g = symptoms_map.get(k) if symptoms_map else None %}
+              <tr>
+                <td class="border px-2 py-1">{{ k }} — {{ g.nama if g else 'Gejala' }}</td>
+                <td class="border px-2 py-1 text-center">{{ d.x | round(2) }}</td>
+                <td class="border px-2 py-1 text-center">{{ (d.membership.sedikit or 0)|round(2) }}</td>
+                <td class="border px-2 py-1 text-center">{{ (d.membership.sedang or 0)|round(2) }}</td>
+                <td class="border px-2 py-1 text-center">{{ (d.membership.banyak or 0)|round(2) }}</td>
+                <td class="border px-2 py-1 text-center">{{ d.bobot_gejala | round(2) }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-medium mb-2">2) Evaluasi Rule (Tsukamoto)</h3>
+        <div class="space-y-3">
+          {% for r in exp.rules %}
+          {% set k = r.kode_penyakit %}
+          <div class="border rounded p-3">
+            <div class="text-sm">
+              <div><span class="font-medium">Rule Group:</span> {{ r.group_nama or ('#' ~ r.group_id) }}</div>
+              <div><span class="font-medium">Penyakit:</span> {{ k }} — {{ penyakit_map.get(k, k) }}</div>
+              <div><span class="font-medium">Alpha:</span> {{ r.alpha | round(3) }} | <span class="font-medium">Z:</span> {{ r.z | round(3) }}</div>
+            </div>
+            <div class="mt-2 overflow-x-auto">
+              <table class="w-full text-xs border">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="border px-2 py-1">Gejala</th>
+                    <th class="border px-2 py-1">Term</th>
+                    <th class="border px-2 py-1">x</th>
+                    <th class="border px-2 py-1">μ(term)</th>
+                    <th class="border px-2 py-1">Bobot</th>
+                    <th class="border px-2 py-1">αi</th>
+                    <th class="border px-2 py-1">Catatan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for c in r.conditions %}
+                  <tr>
+                    <td class="border px-2 py-1">{{ c.kode_gejala }}</td>
+                    <td class="border px-2 py-1">{{ c.term }}</td>
+                    <td class="border px-2 py-1 text-center">{{ c.x if c.x is not none else '-' }}</td>
+                    <td class="border px-2 py-1 text-center">{{ (c.mu or 0) | round(3) }}</td>
+                    <td class="border px-2 py-1 text-center">{{ (c.bobot_gejala or 1) | round(2) }}</td>
+                    <td class="border px-2 py-1 text-center">{{ (c.alpha_i or 0) | round(3) }}</td>
+                    <td class="border px-2 py-1">{{ c.catatan or '' }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-medium mb-2">3) Defuzzifikasi per Penyakit</h3>
+        {% set df = exp.defuzzifikasi %}
+        {% if df and df.per_penyakit %}
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="border px-2 py-1">Penyakit</th>
+                <th class="border px-2 py-1">Bobot Penyakit</th>
+                <th class="border px-2 py-1">Numerator</th>
+                <th class="border px-2 py-1">Denominator</th>
+                <th class="border px-2 py-1">Skor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for k, v in df.per_penyakit.items() %}
+              <tr>
+                <td class="border px-2 py-1">{{ k }} — {{ penyakit_map.get(k, k) }}</td>
+                <td class="border px-2 py-1 text-center">{{ (v.w_p or 1) | round(2) }}</td>
+                <td class="border px-2 py-1 text-center">{{ (v.numerator or 0) | round(4) }}</td>
+                <td class="border px-2 py-1 text-center">{{ (v.denominator or 0) | round(4) }}</td>
+                <td class="border px-2 py-1 text-center">{{ (v.skor or 0) | round(4) }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+
+        <div class="text-sm mt-3">
+          <div><span class="font-medium">Total Skor Normalisasi:</span> {{ (df.total_skor_normalisasi or 0) | round(4) }}</div>
+          <div><span class="font-medium">Terpilih:</span> {{ df.kode_terpilih }} — {{ df.nama_terpilih }} ({{ (df.nilai_fuzzy_terpilih * 100) | round(2) }}%)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
   
 
 <!-- Aksi tombol -->
